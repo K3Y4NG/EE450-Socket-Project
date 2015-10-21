@@ -5,8 +5,6 @@
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/server.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/server.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/server.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/server.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverA.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverB.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverC.txt" isTestSource="false" />

@@ -6,8 +6,13 @@
 #define EE450_SOCKET_PROJECT_CLIENT_H
 
 /**
- * TODO: Change FILENAME to specified text file.
+ * TODO: Change FILENAME to specified text file. Check DEBUG and LOCAL constants.
  */
+#define TRUE                                    1
+#define FALSE                                   0
+#define DEBUG                                   TRUE
+#define LOCAL                                   TRUE
+
 #define FILENAME                                "serverA.txt"
 #define MESSAGE_LENGTH                          256
 #define LINE_LENGTH                             40
@@ -24,20 +29,17 @@
 #define CANNOT_RESOLVE_SERVER_IP_ADDRESS_ERROR  202
 #define CANNOT_BIND_TO_SOCKET_ERROR             203
 
-#define TRUE                                    1
-#define FALSE                                   0
-#define DEBUG                                   TRUE
-#define LOCAL                                   TRUE
-
 #define NUNKI_SERVER_NAME                       "nunki.usc.edu"
 #define LOCAL_HOST                              "localhost"
+#define HOST_NAME                               LOCAL ? LOCAL_HOST : NUNKI_SERVER_NAME
 #define SERVER_A_UDP_PORT_NUMBER                21646
+#define SERVER_A_UDP_PORT_NUMBER_STR            "21646"
 
 void read_file();
 void print_server_costs();
 int create_UDP_socket();
-int bind_UDP_socket(int UDP_socket_descriptor);
-int set_up_udp_socket();
-void print_server_info(int UDP_socket_descriptor);
+int bind_UDP_socket();
+int set_up_UDP_socket();
+void print_server_info();
 
 #endif //EE450_SOCKET_PROJECT_CLIENT_H

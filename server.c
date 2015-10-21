@@ -12,27 +12,21 @@
 #include <unistd.h>
 #include "server.h"
 
+int UDP_socket_descriptor;
+int TCP_socket_descriptor;
 int to_server_cost[NUM_SERVER];
 struct sockaddr_in UDP_socket_address;
-struct addrinfo server_A_socket_info;
+struct sockaddr_in TCP_socket_address;
+struct addrinfo server_A_TCP_socket_info;
+struct addrinfo server_A_UDP_socket_info;
 
 int main() {
-//    struct in_addr **addr_list;
-//    int i;
+    set_up_UDP_socket();
     read_file();
-    set_up_udp_socket();
-//    struct hostent *nunki = gethostbyname("localhost");
-//    printf("    IP addresses: ");
-//    addr_list = (struct in_addr **)nunki->h_addr_list;
-//    for(i = 0; addr_list[i] != NULL; i++) {
-//        printf("%s ", inet_ntoa(*addr_list[i]));
-//    }
-//    printf("\n");
 }
 
 void read_file() {
     FILE *file = fopen(FILENAME, "r");
-    size_t length;
     char line[LINE_LENGTH];
 
     if (file == NULL) {
@@ -85,34 +79,31 @@ void print_server_costs() {
     printf("==========================================\n\n");
 }
 
-int set_up_udp_socket() {
+int set_up_UDP_socket() {
     int UDP_socket_descriptor = create_UDP_socket();
     if (UDP_socket_descriptor < 0) {
         perror("cannot create UDP socket");
         exit(UDP_SOCKET_CREATION_ERROR);
     }
-    bind_UDP_socket(UDP_socket_descriptor);
+    bind_UDP_socket();
+    // TODO Update close method;
     close(UDP_socket_descriptor);
     return (0);
 }
 
 int create_UDP_socket() {
-    int udp_socket_number;
-    if ((udp_socket_number = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    if ((UDP_socket_descriptor = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         return -1;
     }
-    else return udp_socket_number;
+    else return UDP_socket_descriptor;
 }
 
-int bind_UDP_socket(int UDP_socket_descriptor) {
+int bind_UDP_socket() {
     memset((void *)&UDP_socket_address, 0 , sizeof(struct sockaddr_in));
     struct hostent *nunki_server_IP_address_list_raw;
     struct in_addr **nunki_server_IP_address_list;
 
-    /**
-     *
-     */
-    if ((nunki_server_IP_address_list_raw = gethostbyname(LOCAL ? LOCAL_HOST : NUNKI_SERVER_NAME)) == NULL) {
+    if ((nunki_server_IP_address_list_raw = gethostbyname(HOST_NAME)) == NULL) {
         char error_info[MESSAGE_LENGTH];
         char *error_info_front = "Error finding IP address for ";
         strcat(error_info, error_info_front);
@@ -127,11 +118,12 @@ int bind_UDP_socket(int UDP_socket_descriptor) {
     UDP_socket_address.sin_addr = **nunki_server_IP_address_list;
     UDP_socket_address.sin_port = htons(SERVER_A_UDP_PORT_NUMBER);
 
-    server_A_socket_info.ai_family = UDP_socket_address.sin_family;
-    server_A_socket_info.ai_addr = (struct sockaddr *)&UDP_socket_address;
-    server_A_socket_info.ai_addrlen = (socklen_t)sizeof(UDP_socket_address);
+    server_A_UDP_socket_info.ai_family = UDP_socket_address.sin_family;
+    server_A_UDP_socket_info.ai_addr = (struct sockaddr *)&UDP_socket_address;
+    server_A_UDP_socket_info.ai_addrlen = (socklen_t)sizeof(UDP_socket_address);
+    server_A_UDP_socket_info.ai_socktype = SOCK_DGRAM;
 
-    if (bind(UDP_socket_descriptor, server_A_socket_info.ai_addr, server_A_socket_info.ai_addrlen) < 0) {
+    if (bind(UDP_socket_descriptor, server_A_UDP_socket_info.ai_addr, server_A_UDP_socket_info.ai_addrlen) < 0) {
         char error_info[MESSAGE_LENGTH];
         char *error_info_front = "Error binding adresses for socket ";
         char *socket_descriptor[MESSAGE_LENGTH];
@@ -142,17 +134,18 @@ int bind_UDP_socket(int UDP_socket_descriptor) {
         exit(CANNOT_BIND_TO_SOCKET_ERROR);
     }
 
-    DEBUG ? print_server_info(UDP_socket_descriptor) : NULL;
+    DEBUG ? print_server_info() : NULL;
 }
 
-void print_server_info(int UDP_socket_descriptor) {
+void print_server_info() {
     char *ip_addr[MESSAGE_LENGTH];
     printf("==========================================\n");
     printf("DEBUG: Bind successful...\n");
     printf("DESCRIPTOR: %d\n", UDP_socket_descriptor);
-    printf("ADRESS LENGTH: %d\n", server_A_socket_info.ai_addrlen);
-    printf("FAMILY: %d\n", server_A_socket_info.ai_family);
-    inet_ntop(server_A_socket_info.ai_family, &(((struct sockaddr_in *)server_A_socket_info.ai_addr)->sin_addr), ip_addr, MESSAGE_LENGTH);
+    printf("SOCKET TYPE: %d\n", server_A_UDP_socket_info.ai_socktype);
+    printf("ADRESS LENGTH: %d\n", server_A_UDP_socket_info.ai_addrlen);
+    printf("FAMILY: %d\n", server_A_UDP_socket_info.ai_family);
+    inet_ntop(server_A_UDP_socket_info.ai_family, &(((struct sockaddr_in *)server_A_UDP_socket_info.ai_addr)->sin_addr), ip_addr, MESSAGE_LENGTH);
     printf("IP ADDRESS: %s", ip_addr);
     printf("\n");
     printf("==========================================\n\n");

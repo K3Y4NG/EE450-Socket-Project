@@ -3,7 +3,8 @@ project(EE450_Socket_Project)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES server.c server.h server.c server.h)
+set(SOURCE_FILES server.c server.h universal.h)
+#set(SOURCE_FILES client.c client.h universal.h)
 
 configure_file(serverA.txt serverA.txt COPYONLY)
 configure_file(serverB.txt serverB.txt COPYONLY)

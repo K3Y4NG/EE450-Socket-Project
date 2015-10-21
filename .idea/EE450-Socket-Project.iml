@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/serverB.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverC.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverD.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/universal.h" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -17,10 +17,10 @@ int TCP_socket_descriptor;
 int to_server_cost[NUM_SERVER];
 struct sockaddr_in UDP_socket_address;
 struct sockaddr_in TCP_socket_address;
-//struct addrinfo server_A_TCP_socket_info;
-//struct addrinfo server_A_UDP_socket_info;
+struct sockaddr_in client_TCP_socket_address;
 
 int main() {
+    printf("\n");
     set_up_UDP_socket();
     read_file();
     set_up_TCP_socket();
@@ -30,18 +30,18 @@ int main() {
 //    while (TRUE) {
 //        ;
 //    }
-//    close_sockets();
+    close_sockets();
 }
 
 void read_file() {
-    FILE *file = fopen(FILENAME, "r");
+    FILE *file = fopen(SERVER_CONFIG_FILENAME, "r");
     char line[LINE_LENGTH];
 
     if (file == NULL) {
         char error_info[MESSAGE_LENGTH];
         char *error_info_front = "Error opening file ";
         strcat(error_info, error_info_front);
-        strcat(error_info, FILENAME);
+        strcat(error_info, SERVER_CONFIG_FILENAME);
         perror(error_info);
         exit(FILE_OPENING_ERROR);
     }
@@ -55,21 +55,19 @@ void read_file() {
             char error_info[MESSAGE_LENGTH];
             char *error_info_front = "Error opening file ";
             strcat(error_info, error_info_front);
-            strcat(error_info, FILENAME);
+            strcat(error_info, SERVER_CONFIG_FILENAME);
             perror(error_info);
             exit(FILE_LINE_READING_ERROR);
         }
 
         to_server_cost[line_part_server_name[6] - ASCII_A] = atoi(line_part_to_server_cost);
-        //printf("DEBUG: Printing each server cost...\n");
-        //printf("%s - %d\n", line_part_server_name, to_server_cost[line_part_server_name[6] - ASCII_A]);
     }
 
     if (fclose(file)) {
         char error_info[MESSAGE_LENGTH];
         char *error_info_front = "Error closing file ";
         strcat(error_info, error_info_front);
-        strcat(error_info, FILENAME);
+        strcat(error_info, SERVER_CONFIG_FILENAME);
         perror(error_info);
         exit(FILE_CLOSING_ERROR);
     }
@@ -112,7 +110,7 @@ void bind_UDP_socket() {
 
     UDP_socket_address.sin_family = AF_INET;
     UDP_socket_address.sin_addr = **nunki_server_IP_address_list;
-    UDP_socket_address.sin_port = htons(SERVER_A_UDP_PORT_NUMBER);
+    UDP_socket_address.sin_port = htons(SERVER_UDP_PORT_NUMBER);
 
     if (bind(UDP_socket_descriptor, (struct sockaddr *)&UDP_socket_address, sizeof(UDP_socket_address)) < 0) {
         char error_info[MESSAGE_LENGTH];
@@ -136,7 +134,7 @@ void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket
     printf("DEBUG: Bind successful...\n");
     printf("DESCRIPTOR: %d\n", socket_descriptor);
     printf("FAMILY: %d\n", socket_address->sin_family);
-    printf("ADRESS LENGTH: %d\n", socket_address->sin_len);
+    printf("ADDRESS LENGTH: %d\n", socket_address->sin_len);
     inet_ntop(socket_address->sin_family, &(socket_address->sin_addr), ip_address, MESSAGE_LENGTH);
     printf("IP ADDRESS: %s", ip_address);
     printf("\n");
@@ -153,6 +151,12 @@ void set_up_TCP_socket() {
     DEBUG ? print_descriptor(TCP_socket_descriptor) : NULL;
 
     bind_TCP_socket();
+
+    DEBUG ? print_socket_address_info(TCP_socket_descriptor, &TCP_socket_address) : NULL;
+
+    connect_to_client_over_TCP();
+
+    printf("Connection success!");
 }
 
 int create_TCP_socket() {
@@ -163,12 +167,12 @@ int create_TCP_socket() {
 }
 
 void bind_TCP_socket() {
-    memset((void *)&UDP_socket_address, 0 , sizeof(struct sockaddr_in));
-    struct hostent *nunki_server_IP_address_list_raw = resolve_host_name(HOST_NAME);
-    struct in_addr **nunki_server_IP_address_list = (struct in_addr **)nunki_server_IP_address_list_raw->h_addr_list;
+    memset((void *)&TCP_socket_address, 0 , sizeof(struct sockaddr_in));
+    struct hostent *server_IP_address_list_raw = resolve_host_name(HOST_NAME);
+    struct in_addr **server_IP_address_list = (struct in_addr **)server_IP_address_list_raw->h_addr_list;
 
     TCP_socket_address.sin_family = AF_INET;
-    TCP_socket_address.sin_addr = **nunki_server_IP_address_list;
+    TCP_socket_address.sin_addr = **server_IP_address_list;
     TCP_socket_address.sin_port = htons(0);
 
     if (bind(TCP_socket_descriptor, (struct sockaddr *)&TCP_socket_address, sizeof(TCP_socket_address)) < 0) {
@@ -183,8 +187,40 @@ void bind_TCP_socket() {
     }
 
     update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
+}
 
-    DEBUG ? print_socket_address_info(TCP_socket_descriptor, &TCP_socket_address) : NULL;
+void connect_to_client_over_TCP() {
+    memset((void *)&client_TCP_socket_address, 0, sizeof(client_TCP_socket_address));
+    struct hostent *client_IP_address_list_raw = resolve_host_name(HOST_NAME);
+    struct in_addr **client_IP_address_list = (struct in_addr **)client_IP_address_list_raw->h_addr_list;
+
+    client_TCP_socket_address.sin_family = AF_INET;
+    client_TCP_socket_address.sin_addr = **client_IP_address_list;
+    client_TCP_socket_address.sin_port = htons(CLIENT_TCP_PORT_NUMBER);
+
+    if (connect(TCP_socket_descriptor, (struct sockaddr *)&client_TCP_socket_address, sizeof(client_TCP_socket_address)) < 0) {
+        char error_info[MESSAGE_LENGTH];
+        char *error_info_front = "Error connecting client over TCP socket ";
+        char *socket_descriptor[MESSAGE_LENGTH];
+        strcat(error_info, error_info_front);
+        sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
+        strcat(error_info, socket_descriptor);
+        perror(error_info);
+        exit(CONNECT_TO_CLIENT_OVER_TCP_ERROR);
+    }
+};
+
+void listen_TCP_socket() {
+    if (listen(TCP_socket_descriptor, 5) < 0) {
+        char error_info[MESSAGE_LENGTH];
+        char *error_info_front = "Error listening to TCP socket ";
+        char *socket_descriptor[MESSAGE_LENGTH];
+        strcat(error_info, error_info_front);
+        sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
+        strcat(error_info, socket_descriptor);
+        perror(error_info);
+        exit(CANNOT_LISTEN_TO_TCP_SOCKET_ERROR);
+    }
 }
 
 void establish_TCP_connection() {

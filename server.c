@@ -17,12 +17,20 @@ int TCP_socket_descriptor;
 int to_server_cost[NUM_SERVER];
 struct sockaddr_in UDP_socket_address;
 struct sockaddr_in TCP_socket_address;
-struct addrinfo server_A_TCP_socket_info;
-struct addrinfo server_A_UDP_socket_info;
+//struct addrinfo server_A_TCP_socket_info;
+//struct addrinfo server_A_UDP_socket_info;
 
 int main() {
     set_up_UDP_socket();
     read_file();
+    set_up_TCP_socket();
+//    establish_TCP_connection();
+//    send_neighbor_info_over_TCP();
+//    receive_network_topology_over_UDP();
+//    while (TRUE) {
+//        ;
+//    }
+//    close_sockets();
 }
 
 void read_file() {
@@ -79,16 +87,15 @@ void print_server_costs() {
     printf("==========================================\n\n");
 }
 
-int set_up_UDP_socket() {
-    int UDP_socket_descriptor = create_UDP_socket();
-    if (UDP_socket_descriptor < 0) {
+void set_up_UDP_socket() {
+    if ((UDP_socket_descriptor = create_UDP_socket()) < 0) {
         perror("cannot create UDP socket");
         exit(UDP_SOCKET_CREATION_ERROR);
     }
+
+    DEBUG ? print_descriptor(UDP_socket_descriptor) : NULL;
+
     bind_UDP_socket();
-    // TODO Update close method;
-    close(UDP_socket_descriptor);
-    return (0);
 }
 
 int create_UDP_socket() {
@@ -98,55 +105,134 @@ int create_UDP_socket() {
     else return UDP_socket_descriptor;
 }
 
-int bind_UDP_socket() {
+void bind_UDP_socket() {
     memset((void *)&UDP_socket_address, 0 , sizeof(struct sockaddr_in));
-    struct hostent *nunki_server_IP_address_list_raw;
-    struct in_addr **nunki_server_IP_address_list;
-
-    if ((nunki_server_IP_address_list_raw = gethostbyname(HOST_NAME)) == NULL) {
-        char error_info[MESSAGE_LENGTH];
-        char *error_info_front = "Error finding IP address for ";
-        strcat(error_info, error_info_front);
-        strcat(error_info, NUNKI_SERVER_NAME);
-        perror(error_info);
-        exit(CANNOT_RESOLVE_SERVER_IP_ADDRESS_ERROR);
-    }
-
-    nunki_server_IP_address_list = (struct in_addr **)nunki_server_IP_address_list_raw->h_addr_list;
+    struct hostent *nunki_server_IP_address_list_raw = resolve_host_name(HOST_NAME);
+    struct in_addr **nunki_server_IP_address_list = (struct in_addr **)nunki_server_IP_address_list_raw->h_addr_list;
 
     UDP_socket_address.sin_family = AF_INET;
     UDP_socket_address.sin_addr = **nunki_server_IP_address_list;
     UDP_socket_address.sin_port = htons(SERVER_A_UDP_PORT_NUMBER);
 
-    server_A_UDP_socket_info.ai_family = UDP_socket_address.sin_family;
-    server_A_UDP_socket_info.ai_addr = (struct sockaddr *)&UDP_socket_address;
-    server_A_UDP_socket_info.ai_addrlen = (socklen_t)sizeof(UDP_socket_address);
-    server_A_UDP_socket_info.ai_socktype = SOCK_DGRAM;
-
-    if (bind(UDP_socket_descriptor, server_A_UDP_socket_info.ai_addr, server_A_UDP_socket_info.ai_addrlen) < 0) {
+    if (bind(UDP_socket_descriptor, (struct sockaddr *)&UDP_socket_address, sizeof(UDP_socket_address)) < 0) {
         char error_info[MESSAGE_LENGTH];
-        char *error_info_front = "Error binding adresses for socket ";
+        char *error_info_front = "Error binding adresses for UDP socket ";
         char *socket_descriptor[MESSAGE_LENGTH];
         strcat(error_info, error_info_front);
         sprintf(socket_descriptor, "%d", UDP_socket_descriptor);
         strcat(error_info, socket_descriptor);
         perror(error_info);
-        exit(CANNOT_BIND_TO_SOCKET_ERROR);
+        exit(CANNOT_BIND_TO_UDP_SOCKET_ERROR);
     }
 
-    DEBUG ? print_server_info() : NULL;
+    update_socket_info(UDP_socket_descriptor, &UDP_socket_address);
+
+    DEBUG ? print_socket_address_info(UDP_socket_descriptor, &UDP_socket_address) : NULL;
 }
 
-void print_server_info() {
-    char *ip_addr[MESSAGE_LENGTH];
+void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address) {
+    char *ip_address[MESSAGE_LENGTH];
     printf("==========================================\n");
     printf("DEBUG: Bind successful...\n");
-    printf("DESCRIPTOR: %d\n", UDP_socket_descriptor);
-    printf("SOCKET TYPE: %d\n", server_A_UDP_socket_info.ai_socktype);
-    printf("ADRESS LENGTH: %d\n", server_A_UDP_socket_info.ai_addrlen);
-    printf("FAMILY: %d\n", server_A_UDP_socket_info.ai_family);
-    inet_ntop(server_A_UDP_socket_info.ai_family, &(((struct sockaddr_in *)server_A_UDP_socket_info.ai_addr)->sin_addr), ip_addr, MESSAGE_LENGTH);
-    printf("IP ADDRESS: %s", ip_addr);
+    printf("DESCRIPTOR: %d\n", socket_descriptor);
+    printf("FAMILY: %d\n", socket_address->sin_family);
+    printf("ADRESS LENGTH: %d\n", socket_address->sin_len);
+    inet_ntop(socket_address->sin_family, &(socket_address->sin_addr), ip_address, MESSAGE_LENGTH);
+    printf("IP ADDRESS: %s", ip_address);
     printf("\n");
+    printf("PORT NUMBER: %d\n", ntohs(socket_address->sin_port));
     printf("==========================================\n\n");
+}
+
+void set_up_TCP_socket() {
+    if ((TCP_socket_descriptor = create_TCP_socket()) < 0) {
+        perror("cannot create TCP socket");
+        exit(TCP_SOCKET_CREATION_ERROR);
+    }
+
+    DEBUG ? print_descriptor(TCP_socket_descriptor) : NULL;
+
+    bind_TCP_socket();
+}
+
+int create_TCP_socket() {
+    if ((TCP_socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        return -1;
+    }
+    else return TCP_socket_descriptor;
+}
+
+void bind_TCP_socket() {
+    memset((void *)&UDP_socket_address, 0 , sizeof(struct sockaddr_in));
+    struct hostent *nunki_server_IP_address_list_raw = resolve_host_name(HOST_NAME);
+    struct in_addr **nunki_server_IP_address_list = (struct in_addr **)nunki_server_IP_address_list_raw->h_addr_list;
+
+    TCP_socket_address.sin_family = AF_INET;
+    TCP_socket_address.sin_addr = **nunki_server_IP_address_list;
+    TCP_socket_address.sin_port = htons(0);
+
+    if (bind(TCP_socket_descriptor, (struct sockaddr *)&TCP_socket_address, sizeof(TCP_socket_address)) < 0) {
+        char error_info[MESSAGE_LENGTH];
+        char *error_info_front = "Error binding adresses for TCP socket ";
+        char *socket_descriptor[MESSAGE_LENGTH];
+        strcat(error_info, error_info_front);
+        sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
+        strcat(error_info, socket_descriptor);
+        perror(error_info);
+        exit(CANNOT_BIND_TO_TCP_SOCKET_ERROR);
+    }
+
+    update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
+
+    DEBUG ? print_socket_address_info(TCP_socket_descriptor, &TCP_socket_address) : NULL;
+}
+
+void establish_TCP_connection() {
+
+}
+
+void send_neighbor_info_over_TCP() {
+
+}
+
+void receive_network_topology_over_UDP() {
+
+}
+
+void close_sockets() {
+    // TODO Add error handling codes.
+    close(UDP_socket_descriptor);
+    close(TCP_socket_descriptor);
+}
+
+struct hostent * resolve_host_name(char *host_name) {
+    struct hostent *host_IP_address;
+    if ((host_IP_address = gethostbyname(host_name)) == NULL) {
+        char error_info[MESSAGE_LENGTH];
+        char *error_info_front = "Error finding IP address for ";
+        strcat(error_info, error_info_front);
+        strcat(error_info, host_name);
+        perror(error_info);
+        exit(CANNOT_RESOLVE_HOST_IP_ADDRESS_ERROR);
+    }
+    else return host_IP_address;
+}
+
+void print_descriptor(int socket_descriptor) {
+    printf("Socket descriptor: %d\n", socket_descriptor);
+}
+
+void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address) {
+    int address_length = sizeof(socket_address);
+    if (getsockname(socket_descriptor, (struct sockaddr *)socket_address, (socklen_t *)&address_length)
+        < 0) {
+        char socket_descriptor_str[MESSAGE_LENGTH];
+        char error_info[MESSAGE_LENGTH];
+        char *error_info_front = "Error getting sockect name for socket #";
+        strcat(error_info, error_info_front);
+        sprintf(socket_descriptor_str, "%d", socket_descriptor);
+        strcat(error_info, socket_descriptor_str);
+        perror(error_info);
+        exit(CANNOT_GET_SOCKET_NAME_ERROR);
+    }
 }

@@ -26,8 +26,11 @@
 #define FILE_CLOSING_ERROR                      103
 
 #define UDP_SOCKET_CREATION_ERROR               201
-#define CANNOT_RESOLVE_SERVER_IP_ADDRESS_ERROR  202
-#define CANNOT_BIND_TO_SOCKET_ERROR             203
+#define TCP_SOCKET_CREATION_ERROR               202
+#define CANNOT_RESOLVE_HOST_IP_ADDRESS_ERROR    203
+#define CANNOT_BIND_TO_UDP_SOCKET_ERROR         204
+#define CANNOT_BIND_TO_TCP_SOCKET_ERROR         205
+#define CANNOT_GET_SOCKET_NAME_ERROR            206
 
 #define NUNKI_SERVER_NAME                       "nunki.usc.edu"
 #define LOCAL_HOST                              "localhost"
@@ -38,8 +41,18 @@
 void read_file();
 void print_server_costs();
 int create_UDP_socket();
-int bind_UDP_socket();
-int set_up_UDP_socket();
-void print_server_info();
+void bind_UDP_socket();
+void set_up_UDP_socket();
+void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address);
+void set_up_TCP_socket();
+int create_TCP_socket();
+void bind_TCP_socket();
+void establish_TCP_connection();
+void send_neighbor_info_over_TCP();
+void receive_network_topology_over_UDP();
+void close_sockets();
+struct hostent * resolve_host_name(char *host_name);
+void print_descriptor(int socket_descriptor);
+void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address);
 
 #endif //EE450_SOCKET_PROJECT_CLIENT_H

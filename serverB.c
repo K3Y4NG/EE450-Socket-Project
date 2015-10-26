@@ -10,7 +10,7 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include "server.h"
+#include "serverB.h"
 
 int UDP_socket_descriptor;
 int TCP_socket_descriptor;
@@ -228,6 +228,8 @@ void listen_to_TCP_socket() {
 
 void send_neighbor_info_over_TCP() {
     char buffer[TCP_MESSAGE_LENGTH];
+//    char test_buffer[TCP_MESSAGE_LENGTH];
+//    int i;
     prepare_buffer_message(buffer);
     printf("==========================================\n");
     if (DEBUG) { printf("DEBUG: Buffer string:\n%s\n", buffer); }
@@ -241,16 +243,37 @@ void send_neighbor_info_over_TCP() {
         perror(error_info);
         exit(CANNOT_SEND_DATA_OVER_TCP_ERROR);
     }
+
+//    /**
+//     * Test buffer
+//     */
+//
+//    sleep(10);
+//
+//    for(i = 0; i < TCP_MESSAGE_LENGTH - 1; i++) {
+//        test_buffer[i] = '1';
+//    }
+//
+//    if (send(TCP_socket_descriptor, test_buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+//        char error_info[MESSAGE_LENGTH];
+//        char *error_info_front = "Error sending test data over TCP socket";
+//        strcat(error_info, error_info_front);
+//        strcat(error_info, TCP_socket_descriptor);
+//        perror(error_info);
+//        exit(CANNOT_SEND_DATA_OVER_TCP_ERROR);
+//    }
 }
 
 char * prepare_buffer_message(char *buffer) {
     char cost[MESSAGE_PART_LENGTH];
-    int i;
-
+    int i, j;
     for (i = 0; i < NUM_SERVER; i++) {
         nitoa(to_server_cost[i], cost, 10);
-        strcat(buffer, cost);
+        for (j = 0; j < MESSAGE_PART_LENGTH - 1; j++) {
+            buffer[i * (MESSAGE_PART_LENGTH - 1) + j] = cost[j];
+        }
     }
+    strcat(buffer, SERVER_NAME_STRING);
 }
 
 void receive_network_topology_over_UDP() {

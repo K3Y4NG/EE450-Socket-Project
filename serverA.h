@@ -2,13 +2,14 @@
 // Created by DengYuchi on 10/20/15.
 //
 
-#ifndef EE450_SOCKET_PROJECT_CLIENT_H
-#define EE450_SOCKET_PROJECT_CLIENT_H
+#ifndef EE450_SOCKET_PROJECT_SERVERA_H
+#define EE450_SOCKET_PROJECT_SERVERA_H
 
 #include "universal.h"
 
 // TODO: Change to specified server values.
 
+#define SERVER_NAME_STRING                      "A"
 #define SERVER_UDP_PORT_NUMBER                  21646
 #define SERVER_CONFIG_FILENAME                  "serverA.txt"
 
@@ -34,4 +35,4 @@ void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_addres
 char * nitoa(int num, char* str, int base);
 char * prepare_buffer_message(char *buffer);
 
-#endif //EE450_SOCKET_PROJECT_CLIENT_H
+#endif //EE450_SOCKET_PROJECT_SERVERA_H

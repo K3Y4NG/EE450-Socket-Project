@@ -22,5 +22,8 @@ void close_sockets();
 void print_descriptor(int socket_descriptor);
 void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address);
 void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address);
+void display_error_message(char * error_info_front, int socket_descriptor, int error_number);
+void add_to_server_cost(char *buffer);
+void calculate_network_topology();
 
 #endif //EE450_SOCKET_PROJECT_CLIENT_H

@@ -51,6 +51,10 @@
 #define LOCAL_HOST                              "localhost"
 #define HOST_NAME                               LOCAL ? LOCAL_HOST : NUNKI_SERVER_NAME
 
+/**
+ * NOTE: MAC OS X have removed error number ERESTART since 2012.
+ */
+
 #ifndef ERESTART
 #define ERESTART EINTR
 #endif

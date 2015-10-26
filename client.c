@@ -13,16 +13,19 @@
 #include "client.h"
 
 int TCP_socket_descriptor;
-int UDP_socket_server_A_descriptor;
-int UDP_socket_server_B_descriptor;
-int UDP_socket_server_C_descriptor;
-int UDP_socket_server_D_descriptor;
+
+int server_A_UDP_socket_descriptor;
+int server_B_UDP_socket_descriptor;
+int server_C_UDP_socket_descriptor;
+int server_D_UDP_socket_descriptor;
+
 int server_A_TCP_socket_descriptor;
 int server_B_TCP_socket_descriptor;
 int server_C_TCP_socket_descriptor;
 int server_D_TCP_socket_descriptor;
-int to_server_cost[NUM_SERVER][NUM_SERVER];
+
 struct sockaddr_in TCP_socket_address;
+
 struct sockaddr_in server_A_TCP_socket_address;
 struct sockaddr_in server_B_TCP_socket_address;
 struct sockaddr_in server_C_TCP_socket_address;
@@ -32,7 +35,7 @@ struct sockaddr_in server_B_UDP_socket_address;
 struct sockaddr_in server_C_UDP_socket_address;
 struct sockaddr_in server_D_UDP_socket_address;
 
-extern int errno;
+int server_cost[NUM_SERVER][NUM_SERVER];
 
 int main() {
     printf("\n");
@@ -40,7 +43,8 @@ int main() {
     set_up_TCP_socket();
     establish_TCP_connection();
     receive_neighbor_info_over_TCP();
-//    receive_network_topology_over_UDP();
+//    calculate_network_topology();
+//    send_network_topology_over_UDP();
 //    while (TRUE) {
 //        ;
 //    }
@@ -86,14 +90,7 @@ void bind_TCP_socket() {
     TCP_socket_address.sin_port = htons(CLIENT_TCP_PORT_NUMBER);
 
     if (bind(TCP_socket_descriptor, (struct sockaddr *)&TCP_socket_address, sizeof(TCP_socket_address)) < 0) {
-        char error_info[MESSAGE_LENGTH];
-        char *error_info_front = "Error binding adresses for TCP socket ";
-        char *socket_descriptor[MESSAGE_LENGTH];
-        strcat(error_info, error_info_front);
-        sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
-        strcat(error_info, socket_descriptor);
-        perror(error_info);
-        exit(CANNOT_BIND_TO_TCP_SOCKET_ERROR);
+        display_error_message("Error binding to TCP socket ", TCP_socket_descriptor, CANNOT_BIND_TO_TCP_SOCKET_ERROR);
     }
 
     update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
@@ -101,64 +98,93 @@ void bind_TCP_socket() {
 
 void listen_to_TCP_socket() {
     if (listen(TCP_socket_descriptor, 5) < 0) {
-        char error_info[MESSAGE_LENGTH];
-        char *error_info_front = "Error listening to TCP socket ";
-        char *socket_descriptor[MESSAGE_LENGTH];
-        strcat(error_info, error_info_front);
-        sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
-        strcat(error_info, socket_descriptor);
-        perror(error_info);
-        exit(CANNOT_LISTEN_TO_TCP_SOCKET_ERROR);
+        display_error_message("Error listening to TCP socket ", TCP_socket_descriptor, CANNOT_LISTEN_TO_TCP_SOCKET_ERROR);
     }
 }
 
 void establish_TCP_connection() {
     int address_length = sizeof(server_A_TCP_socket_address);
-    for ( ; ; ) {
-        while ((server_A_TCP_socket_descriptor = accept(TCP_socket_descriptor, (struct sockaddr *)&server_A_TCP_socket_address,
-                      &address_length)) < 0) {
-            /**
-             * NOTE: MAC OS X have removed error number ERESTART since 2012.
-             */
-            if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-                char error_info[MESSAGE_LENGTH];
-                char *error_info_front = "Error accepting incoming TCP connection for TCP socket ";
-                char *socket_descriptor[MESSAGE_LENGTH];
-                strcat(error_info, error_info_front);
-                sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
-                strcat(error_info, socket_descriptor);
-                perror(error_info);
-                exit(CANNOT_ACCEPT_TCP_SOCKET_ERROR);
-            }
+    while ((server_A_TCP_socket_descriptor = accept(TCP_socket_descriptor, (struct sockaddr *)&server_A_TCP_socket_address,
+                                                    (socklen_t *)&address_length)) < 0) {
+        /**
+         * NOTE: MAC OS X have removed error number ERESTART since 2012.
+         */
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message("Error accepting incoming TCP connection for TCP socket ",
+                                  TCP_socket_descriptor, CANNOT_ACCEPT_TCP_SOCKET_ERROR);
         }
-        if (DEBUG) { printf("Accept socket successful!\n"); };
-        print_socket_address_info(TCP_socket_descriptor, &server_A_TCP_socket_address);
-        break;
     }
+    if (DEBUG) { printf("Accept socket successful!\n"); };
+    print_socket_address_info(TCP_socket_descriptor, &server_A_TCP_socket_address);
+
+    while ((server_B_TCP_socket_descriptor = accept(TCP_socket_descriptor, (struct sockaddr *)&server_B_TCP_socket_address,
+                                                    (socklen_t *)&address_length)) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message("Error accepting incoming TCP connection for TCP socket ",
+                                  TCP_socket_descriptor, CANNOT_ACCEPT_TCP_SOCKET_ERROR);
+        }
+    }
+    if (DEBUG) { printf("Accept socket successful!\n"); };
+    print_socket_address_info(TCP_socket_descriptor, &server_B_TCP_socket_address);
+
+    while ((server_C_TCP_socket_descriptor = accept(TCP_socket_descriptor, (struct sockaddr *)&server_C_TCP_socket_address,
+                                                    (socklen_t *)&address_length)) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message("Error accepting incoming TCP connection for TCP socket ",
+                                  TCP_socket_descriptor, CANNOT_ACCEPT_TCP_SOCKET_ERROR);
+        }
+    }
+    if (DEBUG) { printf("Accept socket successful!\n"); };
+    print_socket_address_info(TCP_socket_descriptor, &server_C_TCP_socket_address);
+
+    while ((server_D_TCP_socket_descriptor = accept(TCP_socket_descriptor, (struct sockaddr *)&server_D_TCP_socket_address,
+                                                    (socklen_t *)&address_length)) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message("Error accepting incoming TCP connection for TCP socket ",
+                                  TCP_socket_descriptor, CANNOT_ACCEPT_TCP_SOCKET_ERROR);
+        }
+    }
+    if (DEBUG) { printf("Accept socket successful!\n"); };
+    print_socket_address_info(TCP_socket_descriptor, &server_D_TCP_socket_address);
 }
 
 void receive_neighbor_info_over_TCP() {
     char buffer[TCP_MESSAGE_LENGTH];
-    for ( ; ; ) {
-        while (recv(server_A_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
-            /**
-                 * NOTE: MAC OS X have removed error number ERESTART since 2012.
-                 */
-            if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-                char error_info[MESSAGE_LENGTH];
-                char *error_info_front = "Error receiving data over TCP socket ";
-                char *socket_descriptor[MESSAGE_LENGTH];
-                strcat(error_info, error_info_front);
-                sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
-                strcat(error_info, socket_descriptor);
-                perror(error_info);
-                exit(CANNOT_READ_DATA_OVER_TCP_ERROR);
-            }
+    while (recv(server_A_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message("Error receiving data over child TCP socket ",
+                                  server_A_TCP_socket_descriptor, CANNOT_READ_DATA_OVER_TCP_ERROR);
         }
-
-        printf("Receive data over TCP success!\n%s\n", buffer);
-        break;
     }
+    printf("Receive data over TCP success!\n%s\n", buffer);
+    add_to_server_cost(buffer);
+
+    while (recv(server_B_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message("Error receiving data over child TCP socket ",
+                                  server_B_TCP_socket_descriptor, CANNOT_READ_DATA_OVER_TCP_ERROR);
+        }
+    }
+    printf("Receive data over TCP success!\n%s\n", buffer);
+    add_to_server_cost(buffer);
+
+    while (recv(server_C_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message("Error receiving data over child TCP socket ",
+                                  server_C_TCP_socket_descriptor, CANNOT_READ_DATA_OVER_TCP_ERROR);
+        }
+    }
+    printf("Receive data over TCP success!\n%s\n", buffer);
+    add_to_server_cost(buffer);
+
+    while (recv(server_D_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message("Error receiving data over child TCP socket ",
+                                  server_D_TCP_socket_descriptor, CANNOT_READ_DATA_OVER_TCP_ERROR);
+        }
+    }
+    printf("Receive data over TCP success!\n%s\n", buffer);
+    add_to_server_cost(buffer);
 }
 
 struct hostent * resolve_host_name(char *host_name) {
@@ -181,21 +207,14 @@ void print_descriptor(int socket_descriptor) {
 
 void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address) {
     int address_length = sizeof(socket_address);
-    if (getsockname(socket_descriptor, (struct sockaddr *)socket_address, (socklen_t *)&address_length)
-        < 0) {
-        char socket_descriptor_str[MESSAGE_LENGTH];
-        char error_info[MESSAGE_LENGTH];
-        char *error_info_front = "Error getting sockect name for socket #";
-        strcat(error_info, error_info_front);
-        sprintf(socket_descriptor_str, "%d", socket_descriptor);
-        strcat(error_info, socket_descriptor_str);
-        perror(error_info);
-        exit(CANNOT_GET_SOCKET_NAME_ERROR);
+    if (getsockname(socket_descriptor, (struct sockaddr *)socket_address, (socklen_t *)&address_length) < 0) {
+        display_error_message("Error getting sockect name for socket ",
+                              socket_descriptor, CANNOT_GET_SOCKET_NAME_ERROR);
     }
 }
 
 void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address) {
-    char *ip_address[MESSAGE_LENGTH];
+    char ip_address[MESSAGE_LENGTH];
     printf("==========================================\n");
     printf("DEBUG: Socket Info\n");
     printf("DESCRIPTOR: %d\n", socket_descriptor);
@@ -211,8 +230,45 @@ void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket
 void close_sockets() {
     // TODO Add error handling codes.
     close(TCP_socket_descriptor);
+    close(server_A_TCP_socket_descriptor);
+    close(server_B_TCP_socket_descriptor);
+    close(server_C_TCP_socket_descriptor);
+    close(server_D_TCP_socket_descriptor);
 //    close(UDP_socket_server_A_descriptor);
 //    close(UDP_socket_server_B_descriptor);
 //    close(UDP_socket_server_C_descriptor);
 //    close(UDP_socket_server_D_descriptor);
+}
+
+void display_error_message(char * error_info_front, int socket_descriptor, int error_number) {
+    char error_info[MESSAGE_LENGTH];
+    char *socket_descriptor_string[MESSAGE_LENGTH];
+    strcat(error_info, error_info_front);
+    sprintf(socket_descriptor_string, "%d", socket_descriptor);
+    strcat(error_info, socket_descriptor_string);
+    perror(error_info);
+    exit(error_number);
+}
+
+void add_to_server_cost(char *buffer) {
+    int server_number = (int)buffer[40] - ASCII_A;
+    char cost_string[MESSAGE_PART_LENGTH];
+    int cost;
+    int i, j;
+    for (i = 0; i < NUM_SERVER; i++) {
+        for (j = 0; j < MESSAGE_PART_LENGTH - 1; j++) {
+            cost_string[j] = buffer[i * (MESSAGE_PART_LENGTH - 1) + j];
+        }
+        cost_string[j] = '\0';
+        cost = atoi(cost_string);
+        server_cost[server_number][i] = cost;
+    }
+    if (DEBUG) {
+        printf("%10d%10d%10d%10d\n", server_cost[server_number][0], server_cost[server_number][1],
+               server_cost[server_number][2], server_cost[server_number][3]);
+    }
+}
+
+void calculate_network_topology() {
+
 }

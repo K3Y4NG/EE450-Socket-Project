@@ -24,6 +24,9 @@
 #define MESSAGE_LENGTH                          256
 #define LINE_LENGTH                             40
 #define NUM_SERVER                              4
+#define TEST_NUM_SERVER                         1
+#define MESSAGE_PART_LENGTH                     11
+#define TCP_MESSAGE_LENGTH                      44
 
 #define LINE_TOKEN                              " "
 #define ASCII_A                                 65
@@ -40,9 +43,16 @@
 #define CANNOT_GET_SOCKET_NAME_ERROR            206
 #define CANNOT_LISTEN_TO_TCP_SOCKET_ERROR       207
 #define CONNECT_TO_CLIENT_OVER_TCP_ERROR        208
+#define CANNOT_ACCEPT_TCP_SOCKET_ERROR          209
+#define CANNOT_SEND_DATA_OVER_TCP_ERROR         210
+#define CANNOT_READ_DATA_OVER_TCP_ERROR         211
 
 #define NUNKI_SERVER_NAME                       "nunki.usc.edu"
 #define LOCAL_HOST                              "localhost"
 #define HOST_NAME                               LOCAL ? LOCAL_HOST : NUNKI_SERVER_NAME
+
+#ifndef ERESTART
+#define ERESTART EINTR
+#endif
 
 #endif //EE450_SOCKET_PROJECT_UNIVERSAL_H

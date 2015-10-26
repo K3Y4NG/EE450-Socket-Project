@@ -24,13 +24,14 @@ void set_up_TCP_socket();
 int create_TCP_socket();
 void bind_TCP_socket();
 void connect_to_client_over_TCP();
-void listen_TCP_socket();
-void establish_TCP_connection();
+void listen_to_TCP_socket();
 void send_neighbor_info_over_TCP();
 void receive_network_topology_over_UDP();
 void close_sockets();
 struct hostent * resolve_host_name(char *host_name);
 void print_descriptor(int socket_descriptor);
 void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address);
+char * nitoa(int num, char* str, int base);
+char * prepare_buffer_message(char *buffer);
 
 #endif //EE450_SOCKET_PROJECT_CLIENT_H

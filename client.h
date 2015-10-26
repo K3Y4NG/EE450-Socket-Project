@@ -14,7 +14,9 @@
 void set_up_TCP_socket();
 int create_TCP_socket();
 void bind_TCP_socket();
-void listen_TCP_socket();
+void listen_to_TCP_socket();
+void establish_TCP_connection();
+void receive_neighbor_info_over_TCP();
 struct hostent * resolve_host_name(char *host_name);
 void close_sockets();
 void print_descriptor(int socket_descriptor);

@@ -21,11 +21,13 @@ struct sockaddr_in client_TCP_socket_address;
 
 int main() {
     printf("\n");
-    set_up_UDP_socket();
+//    set_up_UDP_socket();
     read_file();
     set_up_TCP_socket();
-//    establish_TCP_connection();
-//    send_neighbor_info_over_TCP();
+    connect_to_client_over_TCP();
+    if (DEBUG) { printf("Connection success!\n"); }
+    send_neighbor_info_over_TCP();
+    if (DEBUG) { printf("Send data over TCP success!\n"); }
 //    receive_network_topology_over_UDP();
 //    while (TRUE) {
 //        ;
@@ -100,7 +102,11 @@ int create_UDP_socket() {
     if ((UDP_socket_descriptor = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         return -1;
     }
-    else return UDP_socket_descriptor;
+    else {
+//        int socket_option_value = 1;
+//        setsockopt(UDP_socket_descriptor, SOL_SOCKET, SO_REUSEADDR, &socket_option_value, sizeof(int));
+        return UDP_socket_descriptor;
+    }
 }
 
 void bind_UDP_socket() {
@@ -154,9 +160,6 @@ void set_up_TCP_socket() {
 
     DEBUG ? print_socket_address_info(TCP_socket_descriptor, &TCP_socket_address) : NULL;
 
-    connect_to_client_over_TCP();
-
-    printf("Connection success!");
 }
 
 int create_TCP_socket() {
@@ -210,7 +213,7 @@ void connect_to_client_over_TCP() {
     }
 };
 
-void listen_TCP_socket() {
+void listen_to_TCP_socket() {
     if (listen(TCP_socket_descriptor, 5) < 0) {
         char error_info[MESSAGE_LENGTH];
         char *error_info_front = "Error listening to TCP socket ";
@@ -223,12 +226,31 @@ void listen_TCP_socket() {
     }
 }
 
-void establish_TCP_connection() {
+void send_neighbor_info_over_TCP() {
+    char buffer[TCP_MESSAGE_LENGTH];
+    prepare_buffer_message(buffer);
+    printf("==========================================\n");
+    if (DEBUG) { printf("DEBUG: Buffer string:\n%s\n", buffer); }
+    printf("==========================================\n");
 
+    if (send(TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+        char error_info[MESSAGE_LENGTH];
+        char *error_info_front = "Error sending data over TCP socket";
+        strcat(error_info, error_info_front);
+        strcat(error_info, TCP_socket_descriptor);
+        perror(error_info);
+        exit(CANNOT_SEND_DATA_OVER_TCP_ERROR);
+    }
 }
 
-void send_neighbor_info_over_TCP() {
+char * prepare_buffer_message(char *buffer) {
+    char cost[MESSAGE_PART_LENGTH];
+    int i;
 
+    for (i = 0; i < NUM_SERVER; i++) {
+        nitoa(to_server_cost[i], cost, 10);
+        strcat(buffer, cost);
+    }
 }
 
 void receive_network_topology_over_UDP() {
@@ -271,4 +293,53 @@ void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_addres
         perror(error_info);
         exit(CANNOT_GET_SOCKET_NAME_ERROR);
     }
+}
+
+char *nitoa(int num, char *str, int base) {
+    int i = 0, j = 0;
+    int isNegative = FALSE;
+    char temp;
+
+    /* Handle 0 explicitely, otherwise empty string is printed for 0 */
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        while (i < MESSAGE_PART_LENGTH - 1) {
+            str[i++] = '0';
+        }
+        str[i] = '\0'; // Append string terminator
+        return str;
+    }
+
+    // In standard itoa(), negative numbers are handled only with
+    // base 10. Otherwise numbers are considered unsigned.
+    if (num < 0 && base == 10) {
+        isNegative = TRUE;
+        num = -num;
+    }
+
+    // Process individual digits
+    while (num != 0) {
+        int rem = num % base;
+        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        num = num / base;
+    }
+
+    // If number is negative, append '-'
+    if (isNegative)
+        str[i++] = '-';
+
+    while (i < MESSAGE_PART_LENGTH - 1) {
+        str[i++] = '0';
+    }
+
+    str[i] = '\0'; // Append string terminator
+
+    // Reverse the string
+    for (j = 0; j < MESSAGE_PART_LENGTH / 2; j++) {
+        temp = str[j];
+        str[j] = str[MESSAGE_PART_LENGTH - j - 2];
+        str[MESSAGE_PART_LENGTH - j - 2] = temp;
+    }
+    return str;
 }

@@ -9,6 +9,7 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <sys/errno.h>
 #include "client.h"
 
 int TCP_socket_descriptor;
@@ -16,23 +17,33 @@ int UDP_socket_server_A_descriptor;
 int UDP_socket_server_B_descriptor;
 int UDP_socket_server_C_descriptor;
 int UDP_socket_server_D_descriptor;
+int server_A_TCP_socket_descriptor;
+int server_B_TCP_socket_descriptor;
+int server_C_TCP_socket_descriptor;
+int server_D_TCP_socket_descriptor;
 int to_server_cost[NUM_SERVER][NUM_SERVER];
 struct sockaddr_in TCP_socket_address;
-struct sockaddr_in UDP_socket_server_A_address;
-struct sockaddr_in UDP_socket_server_B_address;
-struct sockaddr_in UDP_socket_server_C_address;
-struct sockaddr_in UDP_socket_server_D_address;
+struct sockaddr_in server_A_TCP_socket_address;
+struct sockaddr_in server_B_TCP_socket_address;
+struct sockaddr_in server_C_TCP_socket_address;
+struct sockaddr_in server_D_TCP_socket_address;
+struct sockaddr_in server_A_UDP_socket_address;
+struct sockaddr_in server_B_UDP_socket_address;
+struct sockaddr_in server_C_UDP_socket_address;
+struct sockaddr_in server_D_UDP_socket_address;
+
+extern int errno;
 
 int main() {
     printf("\n");
 //    set_up_UDP_socket();
     set_up_TCP_socket();
-//    establish_TCP_connection();
-//    send_neighbor_info_over_TCP();
+    establish_TCP_connection();
+    receive_neighbor_info_over_TCP();
 //    receive_network_topology_over_UDP();
-    while (TRUE) {
-        ;
-    }
+//    while (TRUE) {
+//        ;
+//    }
     close_sockets();
 }
 
@@ -48,16 +59,21 @@ void set_up_TCP_socket() {
 
     DEBUG ? print_socket_address_info(TCP_socket_descriptor, &TCP_socket_address) : NULL;
 
-    listen_TCP_socket();
+    listen_to_TCP_socket();
 
-    printf("Listnening to port...");
+    if (DEBUG) { printf("Listnening to port %d success!\n", ntohs(TCP_socket_address.sin_port)); }
+
 }
 
 int create_TCP_socket() {
     if ((TCP_socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         return -1;
     }
-    else return TCP_socket_descriptor;
+    else {
+        int socket_option_value = 1;
+        setsockopt(TCP_socket_descriptor, SOL_SOCKET, SO_REUSEADDR, &socket_option_value, sizeof(int));
+        return TCP_socket_descriptor;
+    }
 }
 
 void bind_TCP_socket() {
@@ -83,7 +99,7 @@ void bind_TCP_socket() {
     update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
 }
 
-void listen_TCP_socket() {
+void listen_to_TCP_socket() {
     if (listen(TCP_socket_descriptor, 5) < 0) {
         char error_info[MESSAGE_LENGTH];
         char *error_info_front = "Error listening to TCP socket ";
@@ -96,11 +112,61 @@ void listen_TCP_socket() {
     }
 }
 
+void establish_TCP_connection() {
+    int address_length = sizeof(server_A_TCP_socket_address);
+    for ( ; ; ) {
+        while ((server_A_TCP_socket_descriptor = accept(TCP_socket_descriptor, (struct sockaddr *)&server_A_TCP_socket_address,
+                      &address_length)) < 0) {
+            /**
+             * NOTE: MAC OS X have removed error number ERESTART since 2012.
+             */
+            if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+                char error_info[MESSAGE_LENGTH];
+                char *error_info_front = "Error accepting incoming TCP connection for TCP socket ";
+                char *socket_descriptor[MESSAGE_LENGTH];
+                strcat(error_info, error_info_front);
+                sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
+                strcat(error_info, socket_descriptor);
+                perror(error_info);
+                exit(CANNOT_ACCEPT_TCP_SOCKET_ERROR);
+            }
+        }
+        if (DEBUG) { printf("Accept socket successful!\n"); };
+        print_socket_address_info(TCP_socket_descriptor, &server_A_TCP_socket_address);
+        break;
+    }
+}
+
+void receive_neighbor_info_over_TCP() {
+    char buffer[TCP_MESSAGE_LENGTH];
+    for ( ; ; ) {
+        while (recv(server_A_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+            /**
+                 * NOTE: MAC OS X have removed error number ERESTART since 2012.
+                 */
+            if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+                char error_info[MESSAGE_LENGTH];
+                char *error_info_front = "Error receiving data over TCP socket ";
+                char *socket_descriptor[MESSAGE_LENGTH];
+                strcat(error_info, error_info_front);
+                sprintf(socket_descriptor, "%d", TCP_socket_descriptor);
+                strcat(error_info, socket_descriptor);
+                perror(error_info);
+                exit(CANNOT_READ_DATA_OVER_TCP_ERROR);
+            }
+        }
+
+        printf("Receive data over TCP success!\n%s\n", buffer);
+        break;
+    }
+}
+
 struct hostent * resolve_host_name(char *host_name) {
     struct hostent *host_IP_address;
     if ((host_IP_address = gethostbyname(host_name)) == NULL) {
         char error_info[MESSAGE_LENGTH];
         char *error_info_front = "Error finding IP address for ";
+
         strcat(error_info, error_info_front);
         strcat(error_info, host_name);
         perror(error_info);
@@ -131,7 +197,7 @@ void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_addres
 void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address) {
     char *ip_address[MESSAGE_LENGTH];
     printf("==========================================\n");
-    printf("DEBUG: Bind successful...\n");
+    printf("DEBUG: Socket Info\n");
     printf("DESCRIPTOR: %d\n", socket_descriptor);
     printf("FAMILY: %d\n", socket_address->sin_family);
     printf("ADDRESS LENGTH: %d\n", socket_address->sin_len);

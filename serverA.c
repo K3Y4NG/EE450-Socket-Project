@@ -213,7 +213,7 @@ void receive_network_topology_over_UDP() {
 void print_network_topology(char *buffer) {
     int i, j, k;
     printf("==========================================\n");
-    printf("DEBUG: Network MST topology\n");
+    printf("DEBUG: Network topology\n");
     for (i = 0; i < NUM_SERVER; i++) {
         for (j = i + 1; j < NUM_SERVER; j++) {
             char cost_string[MESSAGE_PART_LENGTH];

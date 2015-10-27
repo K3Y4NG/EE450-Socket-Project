@@ -3,9 +3,9 @@
 //
 
 #include <stdio.h>
-#include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
+#include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -34,7 +34,7 @@ int server_cost[NUM_SERVER][NUM_SERVER];
 int network_MST[NUM_SERVER][NUM_SERVER];
 
 int main() {
-    printf("\n");
+    putchar('\n');
     set_up_UDP_socket();
     set_up_TCP_socket();
     establish_TCP_connection();
@@ -51,7 +51,7 @@ void set_up_UDP_socket() {
         exit(UDP_SOCKET_CREATION_ERROR);
     }
 
-    if (DEBUG) { print_descriptor(UDP_socket_descriptor); }
+    if (DEBUG) { debug_print_descriptor(UDP_socket_descriptor); }
 
     bind_UDP_socket();
 }
@@ -82,7 +82,7 @@ void bind_UDP_socket() {
     }
     update_socket_info(UDP_socket_descriptor, &UDP_socket_address);
 
-    if (DEBUG) { print_socket_address_info(UDP_socket_descriptor, &UDP_socket_address); }
+    if (DEBUG) { debug_print_socket_address_info(UDP_socket_descriptor, &UDP_socket_address); }
 }
 
 void set_up_TCP_socket() {
@@ -93,7 +93,7 @@ void set_up_TCP_socket() {
         exit(TCP_SOCKET_CREATION_ERROR);
     }
 
-    if (DEBUG) { print_descriptor(TCP_socket_descriptor); }
+    if (DEBUG) { debug_print_descriptor(TCP_socket_descriptor); }
 
     bind_TCP_socket();
 
@@ -129,7 +129,7 @@ void bind_TCP_socket() {
     }
 
     update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
-    if (DEBUG) { print_socket_address_info(TCP_socket_descriptor, &TCP_socket_address); }
+    if (DEBUG) { debug_print_socket_address_info(TCP_socket_descriptor, &TCP_socket_address); }
 }
 
 void listen_to_TCP_socket() {
@@ -155,7 +155,7 @@ void establish_TCP_connection() {
 
     if (DEBUG) {
         printf("DEBUG: Accept socket from server A success!\n");
-        print_socket_address_info(server_A_TCP_socket_descriptor, &server_A_TCP_socket_address);
+        debug_print_socket_address_info(server_A_TCP_socket_descriptor, &server_A_TCP_socket_address);
     }
 
     while ((server_B_TCP_socket_descriptor = accept(TCP_socket_descriptor,
@@ -169,7 +169,7 @@ void establish_TCP_connection() {
 
     if (DEBUG) {
         printf("DEBUG: Accept socket from server B success!\n");
-        print_socket_address_info(server_B_TCP_socket_descriptor, &server_B_TCP_socket_address);
+        debug_print_socket_address_info(server_B_TCP_socket_descriptor, &server_B_TCP_socket_address);
     }
 
     while ((server_C_TCP_socket_descriptor = accept(TCP_socket_descriptor,
@@ -183,7 +183,7 @@ void establish_TCP_connection() {
 
     if (DEBUG) {
         printf("DEBUG: Accept socket from server C success!\n");
-        print_socket_address_info(server_C_TCP_socket_descriptor, &server_C_TCP_socket_address);
+        debug_print_socket_address_info(server_C_TCP_socket_descriptor, &server_C_TCP_socket_address);
     }
 
     while ((server_D_TCP_socket_descriptor = accept(TCP_socket_descriptor,
@@ -197,7 +197,7 @@ void establish_TCP_connection() {
 
     if (DEBUG) {
         printf("DEBUG: Accept socket from server D success!\n");
-        print_socket_address_info(server_D_TCP_socket_descriptor, &server_D_TCP_socket_address);
+        debug_print_socket_address_info(server_D_TCP_socket_descriptor, &server_D_TCP_socket_address);
     }
 }
 
@@ -252,47 +252,6 @@ void receive_neighbor_info_over_TCP() {
     print_receive_info('D', &server_D_TCP_socket_address);
 }
 
-struct hostent *resolve_host_name(char *host_name) {
-    struct hostent *host_IP_address;
-    if ((host_IP_address = gethostbyname(host_name)) == NULL) {
-        display_error_message_string("Error finding IP address for ", host_name, RESOLVE_HOST_IP_ADDRESS_ERROR);
-    }
-    return host_IP_address;
-}
-
-void print_descriptor(int socket_descriptor) {
-    printf("DEBUG: Socket descriptor: %d\n", socket_descriptor);
-}
-
-void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address) {
-    int address_length = sizeof(socket_address);
-    if (getsockname(socket_descriptor, (struct sockaddr *) socket_address, (socklen_t *) &address_length) < 0) {
-        display_error_message_int("Error getting sockect name for socket ",
-                                  socket_descriptor, GET_SOCKET_NAME_ERROR);
-    }
-}
-
-void close_sockets() {
-    if (close(TCP_socket_descriptor) < 0) {
-        display_error_message_int("Error closing TCP socket ", TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
-    }
-    if (close(server_A_TCP_socket_descriptor) < 0) {
-        display_error_message_int("Error closing TCP socket ", server_A_TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
-    }
-    if (close(server_B_TCP_socket_descriptor) < 0) {
-        display_error_message_int("Error closing TCP socket ", server_B_TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
-    }
-    if (close(server_C_TCP_socket_descriptor) < 0) {
-        display_error_message_int("Error closing TCP socket ", server_C_TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
-    }
-    if (close(server_D_TCP_socket_descriptor) < 0) {
-        display_error_message_int("Error closing TCP socket ", server_D_TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
-    }
-    if (close(UDP_socket_descriptor) < 0) {
-        display_error_message_int("Error closing UDP socket ", UDP_socket_descriptor, UDP_SOCKET_CLOSE_ERROR);
-    }
-}
-
 void add_to_server_cost(char *buffer) {
     int server_number = (int) buffer[40] - ASCII_A;
     char cost_string[MESSAGE_PART_LENGTH];
@@ -310,63 +269,6 @@ void add_to_server_cost(char *buffer) {
         printf("%10d%10d%10d%10d\n\n", server_cost[server_number][0], server_cost[server_number][1],
                server_cost[server_number][2], server_cost[server_number][3]);
     }
-}
-
-void calculate_network_MST() {
-    int parent[NUM_SERVER];
-    int key[NUM_SERVER];
-    int not_included[NUM_SERVER];
-    int i, j;
-
-    for (i = 0; i < NUM_SERVER; i++) {
-        key[i] = INT_MAX;
-        not_included[i] = FALSE;
-    }
-
-    key[0] = 0;
-    parent[0] = -1;
-
-    for (i = 0; i < NUM_SERVER - 1; i++) {
-        int u = min_key(key, not_included);
-        int v;
-
-        not_included[u] = TRUE;
-        for (v = 0; v < NUM_SERVER; v++) {
-            if (server_cost[u][v] && not_included[v] == FALSE && server_cost[u][v] < key[v]) {
-                parent[v] = u, key[v] = server_cost[u][v];
-            }
-        }
-    }
-
-    for (i = 1; i < NUM_SERVER; i++) {
-        network_MST[parent[i]][i] = server_cost[parent[i]][i];
-        network_MST[i][parent[i]] = server_cost[i][parent[i]];
-    }
-
-    if (DEBUG) {
-        printf("==========================================\n");
-        printf("DEBUG: Calculated network MST topology\n");
-        printf("          A         B         C         D\n");
-        for (i = 0; i < NUM_SERVER; i++) {
-            putchar(i + ASCII_A);
-            for (j = 0; j < NUM_SERVER; j++) {
-                printf("%10d", network_MST[i][j]);
-            }
-            putchar('\n');
-        }
-        printf("==========================================\n\n");
-    }
-
-    print_network_MST_info();
-}
-
-int min_key(int key[], int not_included[]) {
-    int min = INT_MAX, min_index = 0;
-    int vertex;
-    for (vertex = 0; vertex < NUM_SERVER; vertex++)
-        if (not_included[vertex] == FALSE && key[vertex] < min)
-            min = key[vertex], min_index = vertex;
-    return min_index;
 }
 
 void send_network_topology_over_UDP() {
@@ -445,6 +347,100 @@ void prepare_buffer_message(char *buffer) {
     }
 }
 
+void calculate_network_MST() {
+    int parent[NUM_SERVER];
+    int key[NUM_SERVER];
+    int not_included[NUM_SERVER];
+    int i, j;
+
+    for (i = 0; i < NUM_SERVER; i++) {
+        key[i] = INT_MAX;
+        not_included[i] = FALSE;
+    }
+
+    key[0] = 0;
+    parent[0] = -1;
+
+    for (i = 0; i < NUM_SERVER - 1; i++) {
+        int u = min_key(key, not_included);
+        int v;
+
+        not_included[u] = TRUE;
+        for (v = 0; v < NUM_SERVER; v++) {
+            if (server_cost[u][v] && not_included[v] == FALSE && server_cost[u][v] < key[v]) {
+                parent[v] = u, key[v] = server_cost[u][v];
+            }
+        }
+    }
+
+    for (i = 1; i < NUM_SERVER; i++) {
+        network_MST[parent[i]][i] = server_cost[parent[i]][i];
+        network_MST[i][parent[i]] = server_cost[i][parent[i]];
+    }
+
+    if (DEBUG) {
+        printf("==========================================\n");
+        printf("DEBUG: Calculated network MST topology\n");
+        printf("          A         B         C         D\n");
+        for (i = 0; i < NUM_SERVER; i++) {
+            putchar(i + ASCII_A);
+            for (j = 0; j < NUM_SERVER; j++) {
+                printf("%10d", network_MST[i][j]);
+            }
+            putchar('\n');
+        }
+        printf("==========================================\n\n");
+    }
+
+    print_network_MST_info();
+}
+
+int min_key(int key[], int not_included[]) {
+    int min = INT_MAX, min_index = 0;
+    int vertex;
+    for (vertex = 0; vertex < NUM_SERVER; vertex++)
+        if (not_included[vertex] == FALSE && key[vertex] < min)
+            min = key[vertex], min_index = vertex;
+    return min_index;
+}
+
+void close_sockets() {
+    if (close(TCP_socket_descriptor) < 0) {
+        display_error_message_int("Error closing TCP socket ", TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
+    }
+    if (close(server_A_TCP_socket_descriptor) < 0) {
+        display_error_message_int("Error closing TCP socket ", server_A_TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
+    }
+    if (close(server_B_TCP_socket_descriptor) < 0) {
+        display_error_message_int("Error closing TCP socket ", server_B_TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
+    }
+    if (close(server_C_TCP_socket_descriptor) < 0) {
+        display_error_message_int("Error closing TCP socket ", server_C_TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
+    }
+    if (close(server_D_TCP_socket_descriptor) < 0) {
+        display_error_message_int("Error closing TCP socket ", server_D_TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
+    }
+    if (close(UDP_socket_descriptor) < 0) {
+        display_error_message_int("Error closing UDP socket ", UDP_socket_descriptor, UDP_SOCKET_CLOSE_ERROR);
+    }
+}
+
+struct hostent *resolve_host_name(char *host_name) {
+    struct hostent *host_IP_address;
+    if ((host_IP_address = gethostbyname(host_name)) == NULL) {
+        display_error_message_string("Error finding IP address for ", host_name, RESOLVE_HOST_IP_ADDRESS_ERROR);
+    }
+    return host_IP_address;
+}
+
+void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address) {
+    int address_length = sizeof(socket_address);
+    if (getsockname(socket_descriptor, (struct sockaddr *) socket_address, (socklen_t *) &address_length) < 0) {
+        display_error_message_int("Error getting sockect name for socket ",
+                                  socket_descriptor, GET_SOCKET_NAME_ERROR);
+    }
+}
+
 char *nitoa(int number, char *string, int base) {
     int i = 0, j = 0;
     int is_negative = FALSE;
@@ -486,38 +482,6 @@ char *nitoa(int number, char *string, int base) {
         string[MESSAGE_PART_LENGTH - j - 2] = temp;
     }
     return string;
-}
-
-void display_error_message_int(char *error_info_front, int socket_descriptor, int error_number) {
-    char error_info[ERROR_MESSAGE_LENGTH];
-    char *socket_descriptor_string[ERROR_MESSAGE_LENGTH];
-    strcat(error_info, error_info_front);
-    sprintf(socket_descriptor_string, "%d", socket_descriptor);
-    strcat(error_info, socket_descriptor_string);
-    perror(error_info);
-    exit(error_number);
-}
-
-void display_error_message_string(char *error_info_front, char *error_info_back, int error_number) {
-    char error_info[ERROR_MESSAGE_LENGTH];
-    strcat(error_info, error_info_front);
-    strcat(error_info, error_info_back);
-    perror(error_info);
-    exit(error_number);
-}
-
-void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address) {
-    char ip_address[ERROR_MESSAGE_LENGTH];
-    printf("==========================================\n");
-    printf("DEBUG: Socket Info\n");
-    printf("DESCRIPTOR: %d\n", socket_descriptor);
-    printf("FAMILY: %d\n", socket_address->sin_family);
-    printf("ADDRESS LENGTH: %d\n", socket_address->sin_len);
-    inet_ntop(socket_address->sin_family, &(socket_address->sin_addr), ip_address, ERROR_MESSAGE_LENGTH);
-    printf("IP ADDRESS: %s", ip_address);
-    printf("\n");
-    printf("PORT NUMBER: %d\n", ntohs(socket_address->sin_port));
-    printf("==========================================\n\n");
 }
 
 void print_receive_info(char server_name, struct sockaddr_in *server_TCP_socket_address) {
@@ -585,4 +549,40 @@ long calculate_network_MST_cost() {
         }
     }
     return sum;
+}
+
+void display_error_message_int(char *error_info_front, int socket_descriptor, int error_number) {
+    char error_info[ERROR_MESSAGE_LENGTH];
+    char *socket_descriptor_string[ERROR_MESSAGE_LENGTH];
+    strcat(error_info, error_info_front);
+    sprintf(socket_descriptor_string, "%d", socket_descriptor);
+    strcat(error_info, socket_descriptor_string);
+    perror(error_info);
+    exit(error_number);
+}
+
+void display_error_message_string(char *error_info_front, char *error_info_back, int error_number) {
+    char error_info[ERROR_MESSAGE_LENGTH];
+    strcat(error_info, error_info_front);
+    strcat(error_info, error_info_back);
+    perror(error_info);
+    exit(error_number);
+}
+
+void debug_print_descriptor(int socket_descriptor) {
+    printf("DEBUG: Socket descriptor: %d\n", socket_descriptor);
+}
+
+void debug_print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address) {
+    char ip_address[ERROR_MESSAGE_LENGTH];
+    printf("==========================================\n");
+    printf("DEBUG: Socket Info\n");
+    printf("DESCRIPTOR: %d\n", socket_descriptor);
+    printf("FAMILY: %d\n", socket_address->sin_family);
+    printf("ADDRESS LENGTH: %d\n", socket_address->sin_len);
+    inet_ntop(socket_address->sin_family, &(socket_address->sin_addr), ip_address, ERROR_MESSAGE_LENGTH);
+    printf("IP ADDRESS: %s", ip_address);
+    printf("\n");
+    printf("PORT NUMBER: %d\n", ntohs(socket_address->sin_port));
+    printf("==========================================\n\n");
 }

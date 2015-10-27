@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <sys/errno.h>
+#include <limits.h>
 #include "client.h"
 
 int TCP_socket_descriptor;
@@ -36,6 +37,7 @@ struct sockaddr_in server_C_UDP_socket_address;
 struct sockaddr_in server_D_UDP_socket_address;
 
 int server_cost[NUM_SERVER][NUM_SERVER];
+int network_MST[NUM_SERVER][NUM_SERVER];
 
 int main() {
     printf("\n");
@@ -43,7 +45,7 @@ int main() {
     set_up_TCP_socket();
     establish_TCP_connection();
     receive_neighbor_info_over_TCP();
-//    calculate_network_topology();
+    calculate_network_MST();
 //    send_network_topology_over_UDP();
 //    while (TRUE) {
 //        ;
@@ -269,6 +271,52 @@ void add_to_server_cost(char *buffer) {
     }
 }
 
-void calculate_network_topology() {
+void calculate_network_MST() {
+    int parent[NUM_SERVER];
+    int key[NUM_SERVER];
+    int not_included[NUM_SERVER];
+    int i, j;
 
+    for (i = 0; i < NUM_SERVER; i++) {
+        key[i] = INT_MAX;
+        not_included[i] = FALSE;
+    }
+
+    key[0] = 0;
+    parent[0] = -1;
+
+    for (i = 0; i < NUM_SERVER - 1; i++) {
+        int u = min_key(key, not_included);
+        int v;
+
+        not_included[u] = TRUE;
+        for (v = 0; v < NUM_SERVER; v++) {
+            if (server_cost[u][v] && not_included[v] == FALSE && server_cost[u][v] < key[v]) {
+                parent[v] = u, key[v] = server_cost[u][v];
+            }
+        }
+    }
+
+    for (i = 1; i < NUM_SERVER; i++) {
+        network_MST[parent[i]][i] = server_cost[parent[i]][i];
+        network_MST[i][parent[i]] = server_cost[i][parent[i]];
+    }
+
+    if (DEBUG) {
+        for (i = 0; i < NUM_SERVER; i++) {
+            for (j = 0; j < NUM_SERVER; j++) {
+                printf("%10d", network_MST[i][j]);
+            }
+            putchar('\n');
+        }
+    }
+}
+
+int min_key(int key[], int not_included[]) {
+    int min = INT_MAX, min_index;
+    int vertex;
+    for (vertex = 0; vertex < NUM_SERVER; vertex++)
+        if (not_included[vertex] == FALSE && key[vertex] < min)
+            min = key[vertex], min_index = vertex;
+    return min_index;
 }

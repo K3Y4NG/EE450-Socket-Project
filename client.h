@@ -24,6 +24,7 @@ void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_addres
 void print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address);
 void display_error_message(char * error_info_front, int socket_descriptor, int error_number);
 void add_to_server_cost(char *buffer);
-void calculate_network_topology();
+void calculate_network_MST();
+int min_key(int key[], int not_included[]);
 
 #endif //EE450_SOCKET_PROJECT_CLIENT_H

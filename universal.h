@@ -10,7 +10,7 @@
 
 // TODO: Check DEBUG and LOCAL constants.
 
-#define DEBUG                                   TRUE
+#define DEBUG                                   FALSE
 #define LOCAL                                   TRUE
 
 /////////////////////////////////////////
@@ -21,15 +21,18 @@
 #define SERVER_D_UDP_PORT_NUMBER                24646
 #define CLIENT_TCP_PORT_NUMBER                  25646
 
-#define MESSAGE_LENGTH                          256
+#define ERROR_MESSAGE_LENGTH                    256
 #define LINE_LENGTH                             40
 #define NUM_SERVER                              4
 #define TEST_NUM_SERVER                         1
 #define MESSAGE_PART_LENGTH                     11
-#define TCP_MESSAGE_LENGTH                      44
+#define TCP_MESSAGE_LENGTH                      42
+#define UDP_MESSAGE_LENGTH                      161
 
 #define LINE_TOKEN                              " "
 #define ASCII_A                                 65
+#define ASCII_a                                 97
+#define ASCII_0                                 48
 
 #define FILE_OPENING_ERROR                      101
 #define FILE_LINE_READING_ERROR                 102
@@ -37,15 +40,19 @@
 
 #define UDP_SOCKET_CREATION_ERROR               201
 #define TCP_SOCKET_CREATION_ERROR               202
-#define CANNOT_RESOLVE_HOST_IP_ADDRESS_ERROR    203
-#define CANNOT_BIND_TO_UDP_SOCKET_ERROR         204
-#define CANNOT_BIND_TO_TCP_SOCKET_ERROR         205
-#define CANNOT_GET_SOCKET_NAME_ERROR            206
-#define CANNOT_LISTEN_TO_TCP_SOCKET_ERROR       207
+#define RESOLVE_HOST_IP_ADDRESS_ERROR           203
+#define BIND_TO_UDP_SOCKET_ERROR                204
+#define BIND_TO_TCP_SOCKET_ERROR                205
+#define GET_SOCKET_NAME_ERROR                   206
+#define LISTEN_TO_TCP_SOCKET_ERROR              207
 #define CONNECT_TO_CLIENT_OVER_TCP_ERROR        208
-#define CANNOT_ACCEPT_TCP_SOCKET_ERROR          209
-#define CANNOT_SEND_DATA_OVER_TCP_ERROR         210
-#define CANNOT_READ_DATA_OVER_TCP_ERROR         211
+#define ACCEPT_TCP_SOCKET_ERROR                 209
+#define SEND_DATA_OVER_TCP_ERROR                210
+#define READ_DATA_OVER_TCP_ERROR                211
+#define SEND_DATA_OVER_UDP_ERROR                212
+#define READ_DATA_OVER_UDP_ERROR                213
+#define UDP_SOCKET_CLOSE_ERROR                  214
+#define TCP_SOCKET_CLOSE_ERROR                  215
 
 #define NUNKI_SERVER_NAME                       "nunki.usc.edu"
 #define LOCAL_HOST                              "localhost"

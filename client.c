@@ -547,7 +547,7 @@ long calculate_network_MST_cost() {
 
 void display_error_message_int(char *error_info_front, int socket_descriptor, int error_number) {
     char error_info[ERROR_MESSAGE_LENGTH];
-    char *socket_descriptor_string[ERROR_MESSAGE_LENGTH];
+    char socket_descriptor_string[ERROR_MESSAGE_LENGTH];
     strcat(error_info, error_info_front);
     sprintf(socket_descriptor_string, "%d", socket_descriptor);
     strcat(error_info, socket_descriptor_string);

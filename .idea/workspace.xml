@@ -11,15 +11,7 @@
     </ADDITIONAL_GENERATION_ENVIRONMENT>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8cb951b6-5ced-4dd8-aac1-52bec26c4edb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.c" afterPath="$PROJECT_DIR$/client.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverA.c" afterPath="$PROJECT_DIR$/serverA.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverB.c" afterPath="$PROJECT_DIR$/serverB.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverC.c" afterPath="$PROJECT_DIR$/serverC.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverD.c" afterPath="$PROJECT_DIR$/serverD.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/universal.h" afterPath="$PROJECT_DIR$/universal.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="8cb951b6-5ced-4dd8-aac1-52bec26c4edb" name="Default" comment="" />
     <ignored path="EE450-Socket-Project.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -302,7 +294,7 @@
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891566" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14735337" sideWeight="0.49518073" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26802886" sideWeight="0.5048193" order="11" side_tool="true" content_ui="tabs" x="0" y="0" width="1440" height="843" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26802886" sideWeight="0.5048193" order="11" side_tool="true" content_ui="tabs" x="0" y="0" width="1440" height="843" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />

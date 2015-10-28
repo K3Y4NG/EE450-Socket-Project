@@ -1,0 +1,16 @@
+compile : client.o serverA.o serverB.o serverC.o serverD.o
+
+client.o :
+	gcc -o client client.c
+
+serverA.o :
+	gcc -o serverA serverA.c
+
+serverB.o :
+	gcc -o serverB serverB.c
+
+serverC.o :
+	gcc -o serverC serverC.c
+
+serverD.o :
+	gcc -o serverD serverD.c

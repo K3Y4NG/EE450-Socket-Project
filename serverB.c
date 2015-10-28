@@ -379,7 +379,6 @@ void debug_print_socket_address_info(int socket_descriptor, struct sockaddr_in *
     printf("DEBUG: Socket Info\n");
     printf("DESCRIPTOR: %d\n", socket_descriptor);
     printf("FAMILY: %d\n", socket_address->sin_family);
-    printf("ADDRESS LENGTH: %d\n", socket_address->sin_len);
     inet_ntop(socket_address->sin_family, &(socket_address->sin_addr), ip_address, ERROR_MESSAGE_LENGTH);
     printf("IP ADDRESS: %s", ip_address);
     printf("\n");

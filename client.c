@@ -86,8 +86,6 @@ void bind_UDP_socket() {
 }
 
 void set_up_TCP_socket() {
-    char ip_address[ERROR_MESSAGE_LENGTH];
-
     if ((TCP_socket_descriptor = create_TCP_socket()) < 0) {
         perror("Error creating TCP socket");
         exit(TCP_SOCKET_CREATION_ERROR);
@@ -97,9 +95,8 @@ void set_up_TCP_socket() {
 
     bind_TCP_socket();
 
-    inet_ntop(TCP_socket_address.sin_family, &(TCP_socket_address.sin_addr), ip_address, ERROR_MESSAGE_LENGTH);
-    printf("The Client has TCP port number %d and IP address %s.\n\n", (int) ntohs(TCP_socket_address.sin_port),
-           ip_address);
+    printf("The Client has TCP port number %d and IP address %s.\n", ntohs(TCP_socket_address.sin_port),
+           inet_ntoa(TCP_socket_address.sin_addr));
 
     listen_to_TCP_socket();
 }
@@ -501,7 +498,6 @@ void print_receive_info(char server_name, struct sockaddr_in *server_TCP_socket_
     putchar('\n');
     printf("For this connection with Server %c, the Client has TCP port number %d and IP address %s.\n",
            server_name, ntohs(TCP_socket_address.sin_port), inet_ntoa(TCP_socket_address.sin_addr));
-    putchar('\n');
 }
 
 void print_send_info(char server_name, struct sockaddr_in *server_UDP_socket_address) {
@@ -514,7 +510,6 @@ void print_send_info(char server_name, struct sockaddr_in *server_UDP_socket_add
     putchar('\n');
     printf("For this connection with Server %c, the Client has UDP port number %d and IP address %s.\n",
            server_name, ntohs(UDP_socket_address.sin_port), inet_ntoa(UDP_socket_address.sin_addr));
-    putchar('\n');
 }
 
 void print_network_MST_info() {
@@ -522,7 +517,6 @@ void print_network_MST_info() {
     printf("The Client has calculated a tree. The tree cost is %ld:", calculate_network_MST_cost());
     putchar('\n');
     print_edge_cost(network_MST);
-    putchar('\n');
 }
 
 void print_edge_cost(int edge_cost[NUM_SERVER][NUM_SERVER]) {

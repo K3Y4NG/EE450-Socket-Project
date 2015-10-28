@@ -3,11 +3,11 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/client.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/client.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverA.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverB.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverC.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/serverD.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/serverD.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverD.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/universal.h" isTestSource="false" />
     </content>

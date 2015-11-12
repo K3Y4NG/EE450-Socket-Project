@@ -41,13 +41,8 @@ void set_up_UDP_socket() {
         perror("Error creating UDP socket");
         exit(UDP_SOCKET_CREATION_ERROR);
     }
-
-    if (DEBUG) { debug_print_descriptor(UDP_socket_descriptor); }
-
     bind_UDP_socket();
-
-    printf("The Server A has UDP port number %d and IP address %s.\n", ntohs(UDP_socket_address.sin_port),
-           inet_ntoa(UDP_socket_address.sin_addr));
+    printf("The Server %c is up and running.\n", SERVER_NAME_CHAR);
 }
 
 int create_UDP_socket() {
@@ -65,28 +60,22 @@ void bind_UDP_socket() {
     memset((char *) &UDP_socket_address, 0, sizeof(struct sockaddr_in));
     struct hostent *nunki_server_IP_address_list_raw = resolve_host_name(HOST_NAME);
     struct in_addr **nunki_server_IP_address_list = (struct in_addr **) nunki_server_IP_address_list_raw->h_addr_list;
-
     UDP_socket_address.sin_family = AF_INET;
     UDP_socket_address.sin_addr = **nunki_server_IP_address_list;
     UDP_socket_address.sin_port = htons(SERVER_UDP_PORT_NUMBER);
-
     if (bind(UDP_socket_descriptor, (struct sockaddr *) &UDP_socket_address, sizeof(UDP_socket_address)) < 0) {
         display_error_message_int("Error binding address for UDP socket ", UDP_socket_descriptor,
                                   BIND_TO_UDP_SOCKET_ERROR);
     }
     update_socket_info(UDP_socket_descriptor, &UDP_socket_address);
-
-    if (DEBUG) { debug_print_socket_address_info(UDP_socket_descriptor, &UDP_socket_address); }
 }
 
 void read_file() {
     FILE *file = fopen(SERVER_CONFIG_FILENAME, "r");
     char line[LINE_LENGTH];
-
     if (file == NULL) {
         display_error_message_string("Error opening file ", SERVER_CONFIG_FILENAME, FILE_OPENING_ERROR);
     }
-
     while (fgets(line, LINE_LENGTH, file) != NULL) {
         char *line_part_server_name = strtok(line, LINE_TOKEN);
         char *line_part_to_server_cost = strtok(NULL, LINE_TOKEN);
@@ -97,11 +86,9 @@ void read_file() {
             server_cost[line_part_server_name[6] - ASCII_A] = atoi(line_part_to_server_cost);
         }
     }
-
     if (fclose(file)) {
         display_error_message_string("Error closing file ", SERVER_CONFIG_FILENAME, FILE_CLOSING_ERROR);
     }
-
     print_server_costs();
 }
 
@@ -110,13 +97,7 @@ void set_up_TCP_socket() {
         perror("Error creating TCP socket");
         exit(TCP_SOCKET_CREATION_ERROR);
     }
-
-    if (DEBUG) { debug_print_descriptor(TCP_socket_descriptor); }
-
     bind_TCP_socket();
-
-    if (DEBUG) { debug_print_socket_address_info(TCP_socket_descriptor, &TCP_socket_address); }
-
 }
 
 int create_TCP_socket() {
@@ -130,16 +111,13 @@ void bind_TCP_socket() {
     memset((char *) &TCP_socket_address, 0, sizeof(struct sockaddr_in));
     struct hostent *server_IP_address_list_raw = resolve_host_name(HOST_NAME);
     struct in_addr **server_IP_address_list = (struct in_addr **) server_IP_address_list_raw->h_addr_list;
-
     TCP_socket_address.sin_family = AF_INET;
     TCP_socket_address.sin_addr = **server_IP_address_list;
     TCP_socket_address.sin_port = htons(0);
-
     if (bind(TCP_socket_descriptor, (struct sockaddr *) &TCP_socket_address, sizeof(TCP_socket_address)) < 0) {
         display_error_message_int("Error binding address for TCP socket ", TCP_socket_descriptor,
                                   BIND_TO_TCP_SOCKET_ERROR);
     }
-
     update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
 }
 
@@ -147,38 +125,23 @@ void connect_to_client_over_TCP() {
     memset((char *) &client_TCP_socket_address, 0, sizeof(client_TCP_socket_address));
     struct hostent *client_IP_address_list_raw = resolve_host_name(HOST_NAME);
     struct in_addr **client_IP_address_list = (struct in_addr **) client_IP_address_list_raw->h_addr_list;
-
     client_TCP_socket_address.sin_family = AF_INET;
     client_TCP_socket_address.sin_addr = **client_IP_address_list;
     client_TCP_socket_address.sin_port = htons(CLIENT_TCP_PORT_NUMBER);
-
     if (connect(TCP_socket_descriptor, (struct sockaddr *) &client_TCP_socket_address,
                 sizeof(client_TCP_socket_address)) < 0) {
         display_error_message_int("Error connecting client over TCP socket ", TCP_socket_descriptor,
                                   CONNECT_TO_CLIENT_OVER_TCP_ERROR);
     }
-
-    if (DEBUG) { printf("DEBUG: Connection success!\n"); }
 }
 
 void send_neighbor_info_over_TCP() {
     char buffer[TCP_MESSAGE_LENGTH];
-
     prepare_buffer_message(buffer);
-
-    if (DEBUG) {
-        printf("==========================================\n");
-        printf("DEBUG: Buffer string:\n%s\n", buffer);
-        printf("==========================================\n\n");
-    }
-
     if (send(TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
         display_error_message_int("Error sending data over TCP socket ", TCP_socket_descriptor,
                                   SEND_DATA_OVER_TCP_ERROR);
     }
-
-    if (DEBUG) { printf("DEBUG: Send data over TCP success!\n"); }
-
     print_send_info();
 }
 
@@ -228,7 +191,6 @@ char *nitoa(int number, char *string, int base) {
     int i = 0, j = 0;
     int is_negative = FALSE;
     char temp;
-
     if (number == 0) {
         string[i++] = '0';
         string[i] = '\0';
@@ -238,27 +200,22 @@ char *nitoa(int number, char *string, int base) {
         string[i] = '\0';
         return string;
     }
-
     if (number < 0 && base == 10) {
         is_negative = TRUE;
         number = -number;
     }
-
     while (number != 0) {
         int remainder = number % base;
         string[i++] = (char) ((remainder > 9) ? (remainder - 10) + ASCII_a : remainder + ASCII_0);
         number = number / base;
     }
-
     if (is_negative)
         string[i++] = '-';
 
     while (i < MESSAGE_PART_LENGTH - 1) {
         string[i++] = '0';
     }
-
     string[i] = '\0';
-
     for (j = 0; j < MESSAGE_PART_LENGTH / 2; j++) {
         temp = string[j];
         string[j] = string[MESSAGE_PART_LENGTH - j - 2];
@@ -302,7 +259,6 @@ void add_network_topology(char *buffer) {
 
 void print_server_costs() {
     int i;
-
     putchar('\n');
     printf("The Server %c has the following neighbor information:\n", SERVER_NAME_CHAR);
     printf("Neighbor------Cost\n");
@@ -367,21 +323,4 @@ void display_error_message_string(char *error_info_front, char *error_info_back,
     strcat(error_info, error_info_back);
     perror(error_info);
     exit(error_number);
-}
-
-void debug_print_descriptor(int socket_descriptor) {
-    printf("DEBUG: Socket descriptor: %d\n", socket_descriptor);
-}
-
-void debug_print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address) {
-    char ip_address[ERROR_MESSAGE_LENGTH];
-    printf("==========================================\n");
-    printf("DEBUG: Socket Info\n");
-    printf("DESCRIPTOR: %d\n", socket_descriptor);
-    printf("FAMILY: %d\n", socket_address->sin_family);
-    inet_ntop(socket_address->sin_family, &(socket_address->sin_addr), ip_address, ERROR_MESSAGE_LENGTH);
-    printf("IP ADDRESS: %s", ip_address);
-    printf("\n");
-    printf("PORT NUMBER: %d\n", ntohs(socket_address->sin_port));
-    printf("==========================================\n\n");
 }

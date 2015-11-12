@@ -11,7 +11,7 @@
 // TODO: Check DEBUG and LOCAL constants.
 
 #define DEBUG                                   FALSE
-#define LOCAL                                   FALSE
+#define LOCAL                                   TRUE
 
 /////////////////////////////////////////
 

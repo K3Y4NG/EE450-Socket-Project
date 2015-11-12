@@ -58,11 +58,4 @@ void print_edge_cost();
 void display_error_message_int(char *error_info_front, int socket_descriptor, int error_number);
 void display_error_message_string(char *error_info_front, char *error_info_back, int error_number);
 
-
-/**
- * Debug functions.
- */
-void debug_print_descriptor(int socket_descriptor);
-void debug_print_socket_address_info(int socket_descriptor, struct sockaddr_in *socket_address);
-
 #endif //EE450_SOCKET_PROJECT_SERVERB_H

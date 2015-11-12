@@ -12,17 +12,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8cb951b6-5ced-4dd8-aac1-52bec26c4edb" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/EE450-Socket-Project.iml" afterPath="$PROJECT_DIR$/.idea/EE450-Socket-Project.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverA.c" afterPath="$PROJECT_DIR$/serverA.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverA.h" afterPath="$PROJECT_DIR$/serverA.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverB.c" afterPath="$PROJECT_DIR$/serverB.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverB.h" afterPath="$PROJECT_DIR$/serverB.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverC.c" afterPath="$PROJECT_DIR$/serverC.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverC.h" afterPath="$PROJECT_DIR$/serverC.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverD.c" afterPath="$PROJECT_DIR$/serverD.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverD.h" afterPath="$PROJECT_DIR$/serverD.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.c" afterPath="$PROJECT_DIR$/client.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.h" afterPath="$PROJECT_DIR$/client.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/universal.h" afterPath="$PROJECT_DIR$/universal.h" />
     </list>
     <ignored path="EE450-Socket-Project.iws" />
@@ -44,11 +38,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="client.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="client.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
+            <state vertical-scroll-proportion="-7.775701">
+              <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -58,45 +52,27 @@
         <entry file="file://$PROJECT_DIR$/client.h">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="55" column="60" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="60" />
+              <caret line="50" column="3" selection-start-line="50" selection-start-column="3" selection-end-line="50" selection-end-column="3" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="serverA.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/serverA.c">
+      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
-              <folding>
-                <element signature="e#44#62#0" expanded="true" />
-                <marker date="1447286496000" expanded="true" signature="549:783" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="810:1057" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="1083:1379" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="1404:2205" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="2224:3118" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="3145:3324" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="3350:3490" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="3515:4271" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="4307:5095" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="5132:5468" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="6848:7138" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="7188:8131" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="8605:9174" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="9202:9527" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="11121:11428" placeholder="{...}" />
-                <marker date="1447286496000" expanded="true" signature="11529:11706" placeholder="{...}" />
-              </folding>
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <file leaf-file-name="makefile" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/makefile">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.285714">
-              <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -106,7 +82,7 @@
         <entry file="file://$PROJECT_DIR$/universal.h">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="24" column="50" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
+              <caret line="57" column="63" selection-start-line="57" selection-start-column="63" selection-end-line="57" selection-end-column="63" />
               <folding />
             </state>
           </provider>
@@ -122,23 +98,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="serverB.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/serverB.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-              <folding>
-                <element signature="e#44#62#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="serverA.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/serverA.h">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="57" column="89" selection-start-line="57" selection-start-column="89" selection-end-line="57" selection-end-column="89" />
+              <caret line="56" column="3" selection-start-line="54" selection-start-column="0" selection-end-line="56" selection-end-column="3" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="serverD.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serverD.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="43" column="22" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -181,8 +155,6 @@
         <option value="$PROJECT_DIR$/serverA.txt" />
         <option value="$PROJECT_DIR$/server.h" />
         <option value="$PROJECT_DIR$/server.c" />
-        <option value="$PROJECT_DIR$/client.h" />
-        <option value="$PROJECT_DIR$/client.c" />
         <option value="$PROJECT_DIR$/serverD.h" />
         <option value="$PROJECT_DIR$/serverD.c" />
         <option value="$PROJECT_DIR$/serverC.c" />
@@ -193,6 +165,8 @@
         <option value="$PROJECT_DIR$/serverC.h" />
         <option value="$PROJECT_DIR$/universal.h" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/client.c" />
+        <option value="$PROJECT_DIR$/client.h" />
       </list>
     </option>
   </component>
@@ -325,15 +299,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16237482" sideWeight="0.49518073" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3221154" sideWeight="0.4892704" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32168674" sideWeight="0.49213162" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="1.0" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="1.0" sideWeight="0.5107296" order="11" side_tool="true" content_ui="tabs" x="0" y="0" width="1440" height="843" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32091346" sideWeight="0.5078684" order="11" side_tool="true" content_ui="tabs" x="0" y="0" width="1440" height="843" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17453505" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -419,7 +393,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#44#62#0" expanded="true" />
+            <element signature="e#44#62#0" expanded="false" />
             <marker date="1447286496000" expanded="true" signature="549:783" placeholder="{...}" />
             <marker date="1447286496000" expanded="true" signature="810:1057" placeholder="{...}" />
             <marker date="1447286496000" expanded="true" signature="1083:1379" placeholder="{...}" />
@@ -490,7 +464,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#44#62#0" expanded="true" />
+            <element signature="e#44#62#0" expanded="false" />
             <marker date="1447286496000" expanded="true" signature="549:783" placeholder="{...}" />
             <marker date="1447286496000" expanded="true" signature="810:1057" placeholder="{...}" />
             <marker date="1447286496000" expanded="true" signature="1083:1379" placeholder="{...}" />
@@ -538,7 +512,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#44#62#0" expanded="true" />
+            <element signature="e#44#62#0" expanded="false" />
             <marker date="1447286496000" expanded="true" signature="549:783" placeholder="{...}" />
             <marker date="1447286496000" expanded="true" signature="810:1057" placeholder="{...}" />
             <marker date="1447286496000" expanded="true" signature="1083:1379" placeholder="{...}" />
@@ -708,14 +682,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/makefile OSX">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -732,22 +698,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/serverD.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.222222">
-          <caret line="22" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="326" selection-end-column="0" />
-          <folding>
-            <element signature="e#44#62#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/serverA.c">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
           <folding>
-            <element signature="e#44#62#0" expanded="true" />
+            <element signature="e#44#62#0" expanded="false" />
             <marker date="1447286496000" expanded="true" signature="549:783" placeholder="{...}" />
             <marker date="1447286496000" expanded="true" signature="810:1057" placeholder="{...}" />
             <marker date="1447286496000" expanded="true" signature="1083:1379" placeholder="{...}" />
@@ -768,20 +724,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/serverA.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="57" column="89" selection-start-line="57" selection-start-column="89" selection-end-line="57" selection-end-column="89" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/serverB.c">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
           <folding>
-            <element signature="e#44#62#0" expanded="true" />
+            <element signature="e#44#62#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -812,18 +760,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client.c">
+    <entry file="file://$PROJECT_DIR$/makefile">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client.h">
+    <entry file="file://$PROJECT_DIR$/serverD.c">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="55" column="60" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="60" />
+          <caret line="43" column="22" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
           <folding />
         </state>
       </provider>
@@ -831,15 +779,39 @@
     <entry file="file://$PROJECT_DIR$/universal.h">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="50" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
+          <caret line="57" column="63" selection-start-line="57" selection-start-column="63" selection-end-line="57" selection-end-column="63" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.285714">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serverA.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="56" column="3" selection-start-line="54" selection-start-column="0" selection-end-line="56" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="3" selection-start-line="50" selection-start-column="3" selection-end-line="50" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.775701">
+          <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="33" />
           <folding />
         </state>
       </provider>

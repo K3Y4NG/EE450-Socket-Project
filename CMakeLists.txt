@@ -6,9 +6,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #set(SOURCE_FILES serverA.c serverA.h universal.h)
 #set(SOURCE_FILES serverB.c serverB.h universal.h)
 #set(SOURCE_FILES serverC.c serverC.h universal.h)
-set(SOURCE_FILES serverD.c serverD.h universal.h)
+#set(SOURCE_FILES serverD.c serverD.h universal.h)
 
-#set(SOURCE_FILES client.c client.h universal.h)
+set(SOURCE_FILES client.c client.h universal.h)
 
 configure_file(serverA.txt serverA.txt COPYONLY)
 configure_file(serverB.txt serverB.txt COPYONLY)

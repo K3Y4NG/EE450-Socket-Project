@@ -11,14 +11,7 @@
     </ADDITIONAL_GENERATION_ENVIRONMENT>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8cb951b6-5ced-4dd8-aac1-52bec26c4edb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/EE450-Socket-Project.iml" afterPath="$PROJECT_DIR$/.idea/EE450-Socket-Project.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.c" afterPath="$PROJECT_DIR$/client.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.h" afterPath="$PROJECT_DIR$/client.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/universal.h" afterPath="$PROJECT_DIR$/universal.h" />
-    </list>
+    <list default="true" id="8cb951b6-5ced-4dd8-aac1-52bec26c4edb" name="Default" comment="" />
     <ignored path="EE450-Socket-Project.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,9 +34,11 @@
       <file leaf-file-name="client.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.775701">
-              <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="33" />
-              <folding />
+            <state vertical-scroll-proportion="-4.654206">
+              <caret line="59" column="18" selection-start-line="59" selection-start-column="18" selection-end-line="59" selection-end-column="18" />
+              <folding>
+                <element signature="e#44#62#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -363,7 +358,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="34" column="5" selection-start-line="32" selection-start-column="4" selection-end-line="34" selection-end-column="5" />
-          <folding />
+          <folding>
+            <element signature="e#44#62#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -434,7 +431,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="34" column="5" selection-start-line="32" selection-start-column="4" selection-end-line="34" selection-end-column="5" />
-          <folding />
+          <folding>
+            <element signature="e#44#62#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -810,9 +809,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.775701">
-          <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="33" />
-          <folding />
+        <state vertical-scroll-proportion="-4.654206">
+          <caret line="59" column="18" selection-start-line="59" selection-start-column="18" selection-end-line="59" selection-end-column="18" />
+          <folding>
+            <element signature="e#44#62#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

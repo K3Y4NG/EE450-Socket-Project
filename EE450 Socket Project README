@@ -1,0 +1,173 @@
+================================================================================
+                         EE450 Socket Project README
+================================================================================
+
+                            Name:     Yuchi Deng
+                            Session:  2
+                            USC ID:   9043577646
+
+================================================================================
+
+I.   Work Have Done
+
+    In this socket project, I have successfully implemented all the required
+    functionalities with one client file and four individual server files.
+
+    At the beginning, I used local OS environment with IDE to code and test
+    my programs. After I finished debug testing, I moved all the files to the
+    USC Nunki server and tested my program as well. It worked as expected.
+
+================================================================================
+
+II.  Extra File
+
+    In my implementation, I created a C header file called universal.h which
+    includes some universal definitions.
+
+================================================================================
+
+III. File Structure
+
+    1. client.h & client.c
+         The client's  C header and source files.
+
+    2. serverA.h & serverA.c
+        The serverA's C header and source files.
+
+    3. serverB.h & serverB.c
+        The serverB's C header and source files.
+
+    4. serverC.h & serverC.c
+        The serverC's C header and source files.
+
+    5. serverD.h & serverD.c
+        The serverD's C header and source files.
+
+    6. universal.h
+        The C header file that includes universal definitions that can be used
+        for all source files.
+
+================================================================================
+
+IV.  Implementations
+
+    The client and all 4 servers work properly and functionally.
+
+    1. Client
+
+        The client's main program flow is as follows:
+
+            a. Create and bind to the UDP socket.
+            b. Create, bind to and listen to the TCP socket.
+            c. Establish TCP connections from the servers.
+            d. Receive network neighbor info from the servers over TCP.
+            e. Calculate the network topology.
+            f. Send back the network topology to the servers over UDP.
+            g. Finalize the program and close sockets.
+
+    2. Servers
+
+        The server's main program flows are almost identical to each other as
+        follows:
+
+            a. Create and bind to the UDP socket.
+            b. Read network neighbor info from the configuration file.
+            c. Create, bind to and listen to the TCP socket.
+            d. Establish TCP connections to the client.
+            e. Send network neighbor info to the client over TCP.
+            f. Receive the network topology from the client over UDP.
+            g. Finalize the program and close sockets.
+
+================================================================================
+
+V.   Compile and Execution Instructions
+
+    1. Create 5 different terminal window instances.
+
+    2. cd all 5 terminal windows to the project
+
+    3. In the first terminal window, type
+
+        gmake compile
+
+       to compile and link all the executable files.
+
+    4. In the first terminal window, type
+
+        ./client
+
+       to run the client program.
+
+    5. In the rest 4 terminal windows, respectively type
+
+        ./serverA
+        ./serverB
+        ./serverC
+        ./serverD
+
+       to run the four server programs.
+
+    6. Wait for program's response and output.
+
+================================================================================
+
+VI.  Message Format
+
+    The message format is as follows.
+
+    1. The message (neighbor message) sent from the server to the client
+
+        String (char[]) format, 42 bytes total, 4 x 10 bytes for a server's
+        each neighbor's cost. The 41st byte is the ID of the server itself.
+        The last byte is the message end ('\0').
+
+
+        String (char[]) format, ASCII encoding, 42 bytes total.
+        ------------------------------------------------------------------
+        |  Cost to  |  Cost to  |  Cost to  |  Cost to  | Server |Msg End|
+        |  serverA  |  serverB  |  serverC  |  serverD  |   ID   |('\0') |
+        ------------------------------------------------------------------
+           10 bytes    10 bytes    10 bytes    10 bytes   1 byte  1 byte
+
+        NOTE: Not drawn to scale.
+
+
+    2. The message (neighbor message) sent back from the client to the server
+
+        String (char[]) format, 161 bytes total, 4 x (4 x 10) bytes for each
+        cost from each server to all servers (including it self). In The last
+        byte is the message end ('\0').
+
+        String (char[]) format, ASCII encoding, 161 bytes total.
+        ------------------------------------------------------------------
+        |Cost of srv A|Cost of srv A|Cost of srv A|Cost of srv A| Msg End|
+        | to all srvs | to all srvs | to all srvs | to all srvs | ('\0') |
+        ------------------------------------------------------------------
+            40 bytes      40 bytes /    40 bytes   \  40 bytes    1 byte
+                                 /                   \
+                               /                       \
+                             /                           \
+                           /                               \
+                           ---------------------------------
+                           |Cost to|Cost to|Cost to|Cost to|
+                           |serverA|serverB|serverC|serverD|
+                           ---------------------------------
+                           10 bytes each
+
+        NOTE: Not drawn to scale.
+
+================================================================================
+
+VII. Idiosyncrasy and Code Reusing
+
+    1. No idiosyncrasies detected for the program itself, which is that it may
+       be affected by the UNIX OS conditions but the problem is not at the
+       program. All possible error may occurred due to the OS's conditions are
+       caught and are properly handled.
+
+    2. I took the provided materials for reference purpose only, no code is
+       reused from others into this project.
+
+================================================================================
+
+<EOF>

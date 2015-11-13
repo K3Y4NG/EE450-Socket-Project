@@ -52,6 +52,7 @@ void set_up_UDP_socket() {
         perror("Error creating UDP socket");
         exit(UDP_SOCKET_CREATION_ERROR);
     }
+    bind_UDP_socket();
 }
 
 int create_UDP_socket() {
@@ -63,6 +64,21 @@ int create_UDP_socket() {
         setsockopt(UDP_socket_descriptor, SOL_SOCKET, SO_REUSEADDR, &socket_option_value, sizeof(int));
         return UDP_socket_descriptor;
     }
+}
+
+void bind_UDP_socket() {
+    struct hostent *nunki_server_IP_address_list_raw = resolve_host_name(HOST_NAME);
+    struct in_addr **nunki_server_IP_address_list = (struct in_addr **) nunki_server_IP_address_list_raw->h_addr_list;
+    memset((char *) &UDP_socket_address, 0, sizeof(struct sockaddr_in));
+    UDP_socket_address.sin_family = AF_INET;
+    UDP_socket_address.sin_addr = **nunki_server_IP_address_list;
+    UDP_socket_address.sin_port = htons(0);
+    if (bind(UDP_socket_descriptor, (struct sockaddr *) &UDP_socket_address,
+             sizeof(UDP_socket_address)) < 0) {
+        display_error_message_int("Error binding adresses for UDP socket ", UDP_socket_descriptor,
+                                  BIND_TO_UDP_SOCKET_ERROR);
+    }
+    update_socket_info(UDP_socket_descriptor, &UDP_socket_address);
 }
 
 void set_up_TCP_socket() {

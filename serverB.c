@@ -97,6 +97,7 @@ void set_up_TCP_socket() {
         perror("Error creating TCP socket");
         exit(TCP_SOCKET_CREATION_ERROR);
     }
+    bind_TCP_socket();
 }
 
 int create_TCP_socket() {
@@ -104,6 +105,20 @@ int create_TCP_socket() {
         return -1;
     }
     else return TCP_socket_descriptor;
+}
+
+void bind_TCP_socket() {
+    memset((char *) &TCP_socket_address, 0, sizeof(struct sockaddr_in));
+    struct hostent *server_IP_address_list_raw = resolve_host_name(HOST_NAME);
+    struct in_addr **server_IP_address_list = (struct in_addr **) server_IP_address_list_raw->h_addr_list;
+    TCP_socket_address.sin_family = AF_INET;
+    TCP_socket_address.sin_addr = **server_IP_address_list;
+    TCP_socket_address.sin_port = htons(0);
+    if (bind(TCP_socket_descriptor, (struct sockaddr *) &TCP_socket_address, sizeof(TCP_socket_address)) < 0) {
+        display_error_message_int("Error binding address for TCP socket ", TCP_socket_descriptor,
+                                  BIND_TO_TCP_SOCKET_ERROR);
+    }
+    update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
 }
 
 void connect_to_client_over_TCP() {

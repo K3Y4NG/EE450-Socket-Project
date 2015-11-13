@@ -26,7 +26,6 @@ void bind_UDP_socket();
 void read_file();
 void set_up_TCP_socket();
 int create_TCP_socket();
-void bind_TCP_socket();
 void connect_to_client_over_TCP();
 void send_neighbor_info_over_TCP();
 void receive_network_topology_over_UDP();

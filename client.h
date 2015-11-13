@@ -16,7 +16,6 @@
  */
 void set_up_UDP_socket();
 int create_UDP_socket();
-void bind_UDP_socket();
 void set_up_TCP_socket();
 int create_TCP_socket();
 void bind_TCP_socket();

@@ -194,45 +194,6 @@ void accept_and_receive_neighbor_info_over_TCP() {
     add_to_server_cost(buffer);
     print_receive_info('D', &server_D_TCP_socket_address);
 }
-//
-//void receive_neighbor_info_over_TCP() {
-//    char buffer[TCP_MESSAGE_LENGTH];
-//    while (recv(server_A_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
-//        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-//            display_error_message_int("Error receiving data over child TCP socket ",
-//                                      server_A_TCP_socket_descriptor, READ_DATA_OVER_TCP_ERROR);
-//        }
-//    }
-//    add_to_server_cost(buffer);
-//    print_receive_info('A', &server_A_TCP_socket_address);
-//
-//    while (recv(server_B_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
-//        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-//            display_error_message_int("Error receiving data over child TCP socket ",
-//                                      server_B_TCP_socket_descriptor, READ_DATA_OVER_TCP_ERROR);
-//        }
-//    }
-//    add_to_server_cost(buffer);
-//    print_receive_info('B', &server_B_TCP_socket_address);
-//
-//    while (recv(server_C_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
-//        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-//            display_error_message_int("Error receiving data over child TCP socket ",
-//                                      server_C_TCP_socket_descriptor, READ_DATA_OVER_TCP_ERROR);
-//        }
-//    }
-//    add_to_server_cost(buffer);
-//    print_receive_info('C', &server_C_TCP_socket_address);
-//
-//    while (recv(server_D_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
-//        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-//            display_error_message_int("Error receiving data over child TCP socket ",
-//                                      server_D_TCP_socket_descriptor, READ_DATA_OVER_TCP_ERROR);
-//        }
-//    }
-//    add_to_server_cost(buffer);
-//    print_receive_info('D', &server_D_TCP_socket_address);
-//}
 
 void add_to_server_cost(char *buffer) {
     int server_number = (int) buffer[40] - ASCII_A;

@@ -39,8 +39,7 @@ int main() {
     putchar('\n');
     set_up_UDP_socket();
     set_up_TCP_socket();
-    establish_TCP_connection();
-    receive_neighbor_info_over_TCP();
+    accept_and_receive_neighbor_info_over_TCP();
     send_network_topology_over_UDP();
     calculate_network_MST();
     close_sockets();
@@ -123,8 +122,10 @@ void listen_to_TCP_socket() {
     }
 }
 
-void establish_TCP_connection() {
+void accept_and_receive_neighbor_info_over_TCP() {
     int address_length = sizeof(server_A_TCP_socket_address);
+    char buffer[TCP_MESSAGE_LENGTH];
+
     while ((server_A_TCP_socket_descriptor = accept(TCP_socket_descriptor,
                                                     (struct sockaddr *) &server_A_TCP_socket_address,
                                                     (socklen_t *) &address_length)) < 0) {
@@ -133,34 +134,6 @@ void establish_TCP_connection() {
                                       TCP_socket_descriptor, ACCEPT_TCP_SOCKET_ERROR);
         }
     }
-    while ((server_B_TCP_socket_descriptor = accept(TCP_socket_descriptor,
-                                                    (struct sockaddr *) &server_B_TCP_socket_address,
-                                                    (socklen_t *) &address_length)) < 0) {
-        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-            display_error_message_int("Error accepting incoming TCP connection for socket ",
-                                      TCP_socket_descriptor, ACCEPT_TCP_SOCKET_ERROR);
-        }
-    }
-    while ((server_C_TCP_socket_descriptor = accept(TCP_socket_descriptor,
-                                                    (struct sockaddr *) &server_C_TCP_socket_address,
-                                                    (socklen_t *) &address_length)) < 0) {
-        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-            display_error_message_int("Error accepting incoming TCP connection for socket ",
-                                      TCP_socket_descriptor, ACCEPT_TCP_SOCKET_ERROR);
-        }
-    }
-    while ((server_D_TCP_socket_descriptor = accept(TCP_socket_descriptor,
-                                                    (struct sockaddr *) &server_D_TCP_socket_address,
-                                                    (socklen_t *) &address_length)) < 0) {
-        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
-            display_error_message_int("Error accepting incoming TCP connection for socket ",
-                                      TCP_socket_descriptor, ACCEPT_TCP_SOCKET_ERROR);
-        }
-    }
-}
-
-void receive_neighbor_info_over_TCP() {
-    char buffer[TCP_MESSAGE_LENGTH];
     while (recv(server_A_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
         if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
             display_error_message_int("Error receiving data over child TCP socket ",
@@ -170,6 +143,14 @@ void receive_neighbor_info_over_TCP() {
     add_to_server_cost(buffer);
     print_receive_info('A', &server_A_TCP_socket_address);
 
+    while ((server_B_TCP_socket_descriptor = accept(TCP_socket_descriptor,
+                                                    (struct sockaddr *) &server_B_TCP_socket_address,
+                                                    (socklen_t *) &address_length)) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message_int("Error accepting incoming TCP connection for socket ",
+                                      TCP_socket_descriptor, ACCEPT_TCP_SOCKET_ERROR);
+        }
+    }
     while (recv(server_B_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
         if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
             display_error_message_int("Error receiving data over child TCP socket ",
@@ -179,6 +160,14 @@ void receive_neighbor_info_over_TCP() {
     add_to_server_cost(buffer);
     print_receive_info('B', &server_B_TCP_socket_address);
 
+    while ((server_C_TCP_socket_descriptor = accept(TCP_socket_descriptor,
+                                                    (struct sockaddr *) &server_C_TCP_socket_address,
+                                                    (socklen_t *) &address_length)) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message_int("Error accepting incoming TCP connection for socket ",
+                                      TCP_socket_descriptor, ACCEPT_TCP_SOCKET_ERROR);
+        }
+    }
     while (recv(server_C_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
         if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
             display_error_message_int("Error receiving data over child TCP socket ",
@@ -188,6 +177,14 @@ void receive_neighbor_info_over_TCP() {
     add_to_server_cost(buffer);
     print_receive_info('C', &server_C_TCP_socket_address);
 
+    while ((server_D_TCP_socket_descriptor = accept(TCP_socket_descriptor,
+                                                    (struct sockaddr *) &server_D_TCP_socket_address,
+                                                    (socklen_t *) &address_length)) < 0) {
+        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+            display_error_message_int("Error accepting incoming TCP connection for socket ",
+                                      TCP_socket_descriptor, ACCEPT_TCP_SOCKET_ERROR);
+        }
+    }
     while (recv(server_D_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
         if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
             display_error_message_int("Error receiving data over child TCP socket ",
@@ -197,6 +194,45 @@ void receive_neighbor_info_over_TCP() {
     add_to_server_cost(buffer);
     print_receive_info('D', &server_D_TCP_socket_address);
 }
+//
+//void receive_neighbor_info_over_TCP() {
+//    char buffer[TCP_MESSAGE_LENGTH];
+//    while (recv(server_A_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+//        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+//            display_error_message_int("Error receiving data over child TCP socket ",
+//                                      server_A_TCP_socket_descriptor, READ_DATA_OVER_TCP_ERROR);
+//        }
+//    }
+//    add_to_server_cost(buffer);
+//    print_receive_info('A', &server_A_TCP_socket_address);
+//
+//    while (recv(server_B_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+//        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+//            display_error_message_int("Error receiving data over child TCP socket ",
+//                                      server_B_TCP_socket_descriptor, READ_DATA_OVER_TCP_ERROR);
+//        }
+//    }
+//    add_to_server_cost(buffer);
+//    print_receive_info('B', &server_B_TCP_socket_address);
+//
+//    while (recv(server_C_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+//        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+//            display_error_message_int("Error receiving data over child TCP socket ",
+//                                      server_C_TCP_socket_descriptor, READ_DATA_OVER_TCP_ERROR);
+//        }
+//    }
+//    add_to_server_cost(buffer);
+//    print_receive_info('C', &server_C_TCP_socket_address);
+//
+//    while (recv(server_D_TCP_socket_descriptor, buffer, TCP_MESSAGE_LENGTH, 0) < 0) {
+//        if ((errno != ECHILD) && (errno != ERESTART) && (errno != EINTR)) {
+//            display_error_message_int("Error receiving data over child TCP socket ",
+//                                      server_D_TCP_socket_descriptor, READ_DATA_OVER_TCP_ERROR);
+//        }
+//    }
+//    add_to_server_cost(buffer);
+//    print_receive_info('D', &server_D_TCP_socket_address);
+//}
 
 void add_to_server_cost(char *buffer) {
     int server_number = (int) buffer[40] - ASCII_A;

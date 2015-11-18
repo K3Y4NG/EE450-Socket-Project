@@ -21,8 +21,7 @@ void set_up_TCP_socket();
 int create_TCP_socket();
 void bind_TCP_socket();
 void listen_to_TCP_socket();
-void establish_TCP_connection();
-void receive_neighbor_info_over_TCP();
+void accept_and_receive_neighbor_info_over_TCP();
 void send_network_topology_over_UDP();
 void close_sockets();
 

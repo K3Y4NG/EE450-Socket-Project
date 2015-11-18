@@ -2,9 +2,9 @@
                          EE450 Socket Project README
 ================================================================================
 
-                            Name:     Yuchi Deng
-                            Session:  2
-                            USC ID:   9043577646
+                            Name:    Yuchi Deng
+                            Session: 2
+                            USC ID:  9043577646
 
 ================================================================================
 
@@ -29,7 +29,7 @@ II.  Extra File
 III. File Structure
 
     1. client.h & client.c
-         The client's  C header and source files.
+        The client's  C header and source files.
 
     2. serverA.h & serverA.c
         The serverA's C header and source files.
@@ -63,7 +63,8 @@ IV.  Implementations
             d. Receive network neighbor info from the servers over TCP.
             e. Calculate the network topology.
             f. Send back the network topology to the servers over UDP.
-            g. Finalize the program and close sockets.
+            g. Calculate and display the MST of the network.
+            h. Finalize the program and close sockets.
 
     2. Servers
 
@@ -140,7 +141,7 @@ VI.  Message Format
 
         String (char[]) format, ASCII encoding, 161 bytes total.
         ------------------------------------------------------------------
-        |Cost of srv A|Cost of srv A|Cost of srv A|Cost of srv A| Msg End|
+        |Cost of srv A|Cost of srv B|Cost of srv C|Cost of srv D| Msg End|
         | to all srvs | to all srvs | to all srvs | to all srvs | ('\0') |
         ------------------------------------------------------------------
             40 bytes      40 bytes /    40 bytes   \  40 bytes    1 byte

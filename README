@@ -168,11 +168,10 @@ VII. Idiosyncrasy and Code Reusing
 
     2. Code reusing
         a. Prim's algorithm for finding MST code segment is reused from:
-           http://www.geeksforgeeks.org/greedy-algorithms-set-5-prims
-           -minimum-spanning-tree-mst-2/
+           http://goo.gl/sqTfbZ
 
         b. Integer to String function code segment is reused from:
-           http://www.geeksforgeeks.org/implement-itoa/
+           http://goo.gl/FYjtaz
 
         c. All other code, including the socket-related code are written and
            implemented by myself. I used the provided knowledge base materials

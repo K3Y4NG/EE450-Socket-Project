@@ -12,14 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8cb951b6-5ced-4dd8-aac1-52bec26c4edb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README" afterPath="$PROJECT_DIR$/README" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.c" afterPath="$PROJECT_DIR$/client.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverA.c" afterPath="$PROJECT_DIR$/serverA.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverB.c" afterPath="$PROJECT_DIR$/serverB.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverC.c" afterPath="$PROJECT_DIR$/serverC.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serverD.c" afterPath="$PROJECT_DIR$/serverD.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/universal.h" afterPath="$PROJECT_DIR$/universal.h" />
     </list>
     <ignored path="EE450-Socket-Project.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,21 +33,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="client.c" pinned="false" current-in-tab="true">
+      <file leaf-file-name="client.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.33287102">
+            <state vertical-scroll-proportion="8.888889">
               <caret line="155" column="9" selection-start-line="155" selection-start-column="9" selection-end-line="155" selection-end-column="9" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README" pinned="false" current-in-tab="false">
+      <file leaf-file-name="README" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="65" column="82" selection-start-line="65" selection-start-column="82" selection-end-line="65" selection-end-column="82" />
+            <state vertical-scroll-proportion="0.6991979">
+              <caret line="173" column="31" selection-start-line="173" selection-start-column="31" selection-end-line="173" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -176,13 +169,13 @@
         <option value="$PROJECT_DIR$/serverA.txt" />
         <option value="$PROJECT_DIR$/client.h" />
         <option value="$PROJECT_DIR$/client.c" />
-        <option value="$PROJECT_DIR$/README" />
         <option value="$PROJECT_DIR$/serverA.c" />
         <option value="$PROJECT_DIR$/serverB.c" />
         <option value="$PROJECT_DIR$/serverC.c" />
         <option value="$PROJECT_DIR$/serverD.c" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/universal.h" />
+        <option value="$PROJECT_DIR$/README" />
       </list>
     </option>
   </component>
@@ -696,14 +689,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="65" column="82" selection-start-line="65" selection-start-column="82" selection-end-line="65" selection-end-column="82" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/serverD.c">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -768,8 +753,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.33287102">
+        <state vertical-scroll-proportion="8.888889">
           <caret line="155" column="9" selection-start-line="155" selection-start-column="9" selection-end-line="155" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6991979">
+          <caret line="173" column="31" selection-start-line="173" selection-start-column="31" selection-end-line="173" selection-end-column="31" />
           <folding />
         </state>
       </provider>

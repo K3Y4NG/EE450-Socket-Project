@@ -95,18 +95,19 @@ V.   Compile and Execution Instructions
 
     4. In the first terminal window, type
 
-        ./client
+        client
 
        to run the client program.
 
-    5. In the rest 4 terminal windows, respectively type
+    5. In the rest 4 terminal windows, type the following four commands
+       respectively in order
 
-        ./serverA
-        ./serverB
-        ./serverC
-        ./serverD
+        serverA
+        serverB
+        serverC
+        serverD
 
-       to run the four server programs.
+       to run the four server executable programs.
 
     6. Wait for program's response and output.
 

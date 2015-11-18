@@ -13,6 +13,7 @@
 #include <limits.h>
 #include "client.h"
 
+// Define global variables for UDP and TCP sockets.
 int TCP_socket_descriptor;
 int UDP_socket_descriptor;
 
@@ -30,11 +31,14 @@ struct sockaddr_in server_C_TCP_socket_address;
 struct sockaddr_in server_D_TCP_socket_address;
 struct sockaddr_in server_UDP_socket_address;
 
+// Define global variables for network cost and topology.
 int server_cost[NUM_SERVER][NUM_SERVER];
 int network_MST[NUM_SERVER][NUM_SERVER];
 
+// External error number.
 extern int errno;
 
+// Main function here.
 int main() {
     putchar('\n');
     set_up_UDP_socket();
@@ -46,6 +50,7 @@ int main() {
     return 0;
 }
 
+// UDP socket setup, including creating and binding process.
 void set_up_UDP_socket() {
     if ((UDP_socket_descriptor = create_UDP_socket()) < 0) {
         perror("Error creating UDP socket");
@@ -54,6 +59,7 @@ void set_up_UDP_socket() {
     bind_UDP_socket();
 }
 
+// Create a UDP socket and return the socket descriptor with error checking.
 int create_UDP_socket() {
     if ((UDP_socket_descriptor = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         return -1;
@@ -65,6 +71,7 @@ int create_UDP_socket() {
     }
 }
 
+// Bind the UDP socket with given socket descriptor with error checking.
 void bind_UDP_socket() {
     struct hostent *nunki_server_IP_address_list_raw = resolve_host_name(HOST_NAME);
     struct in_addr **nunki_server_IP_address_list = (struct in_addr **) nunki_server_IP_address_list_raw->h_addr_list;
@@ -80,6 +87,7 @@ void bind_UDP_socket() {
     update_socket_info(UDP_socket_descriptor, &UDP_socket_address);
 }
 
+// TCP socket setup, including creating and binding process.
 void set_up_TCP_socket() {
     if ((TCP_socket_descriptor = create_TCP_socket()) < 0) {
         perror("Error creating TCP socket");
@@ -91,6 +99,7 @@ void set_up_TCP_socket() {
     listen_to_TCP_socket();
 }
 
+// Create a TCP socket and return the socket descriptor with error checking.
 int create_TCP_socket() {
     if ((TCP_socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         return -1;
@@ -102,6 +111,7 @@ int create_TCP_socket() {
     }
 }
 
+// Bind the TCP socket with given socket descriptor with error checking.
 void bind_TCP_socket() {
     memset((char *) &TCP_socket_address, 0, sizeof(struct sockaddr_in));
     struct hostent *nunki_server_IP_address_list_raw = resolve_host_name(HOST_NAME);
@@ -115,6 +125,7 @@ void bind_TCP_socket() {
     update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
 }
 
+// Listen to the TCP socket and wait for the connection from the servers.
 void listen_to_TCP_socket() {
     if (listen(TCP_socket_descriptor, 5) < 0) {
         display_error_message_int("Error listening to TCP socket ", TCP_socket_descriptor,
@@ -122,6 +133,7 @@ void listen_to_TCP_socket() {
     }
 }
 
+// Accept the connections from four servers and receive the neighbors info over the created TCP connection.
 void accept_and_receive_neighbor_info_over_TCP() {
     int address_length = sizeof(server_A_TCP_socket_address);
     char buffer[TCP_MESSAGE_LENGTH];
@@ -195,21 +207,7 @@ void accept_and_receive_neighbor_info_over_TCP() {
     print_receive_info('D', &server_D_TCP_socket_address);
 }
 
-void add_to_server_cost(char *buffer) {
-    int server_number = (int) buffer[40] - ASCII_A;
-    char cost_string[MESSAGE_PART_LENGTH];
-    int cost;
-    int i, j;
-    for (i = 0; i < NUM_SERVER; i++) {
-        for (j = 0; j < MESSAGE_PART_LENGTH - 1; j++) {
-            cost_string[j] = buffer[i * (MESSAGE_PART_LENGTH - 1) + j];
-        }
-        cost_string[j] = '\0';
-        cost = atoi(cost_string);
-        server_cost[server_number][i] = cost;
-    }
-}
-
+// After receiving successfully, send the network topology back to the servers over UDP connection.
 void send_network_topology_over_UDP() {
     char buffer[UDP_MESSAGE_LENGTH];
     prepare_buffer_message(buffer);
@@ -248,58 +246,7 @@ void send_network_topology_over_UDP() {
     print_send_info('D', &server_UDP_socket_address);
 }
 
-void prepare_buffer_message(char *buffer) {
-    char UDP_message_part[MESSAGE_PART_LENGTH];
-    int i, j, k;
-    for (i = 0; i < NUM_SERVER; i++) {
-        for (j = 0; j < NUM_SERVER; j++) {
-            nitoa(server_cost[i][j], UDP_message_part, 10);
-            for (k = 0; k < MESSAGE_PART_LENGTH - 1; k++) {
-                buffer[(i * NUM_SERVER + j) * (MESSAGE_PART_LENGTH - 1) + k] = UDP_message_part[k];
-            }
-        }
-    }
-    buffer[UDP_MESSAGE_LENGTH - 1] = '\0';
-}
-
-void calculate_network_MST() {
-    int parent[NUM_SERVER];
-    int key[NUM_SERVER];
-    int not_included[NUM_SERVER];
-    int i;
-    for (i = 0; i < NUM_SERVER; i++) {
-        key[i] = INT_MAX;
-        not_included[i] = FALSE;
-    }
-    key[0] = 0;
-    parent[0] = -1;
-    for (i = 0; i < NUM_SERVER - 1; i++) {
-        int u = min_key(key, not_included);
-        int v;
-
-        not_included[u] = TRUE;
-        for (v = 0; v < NUM_SERVER; v++) {
-            if (server_cost[u][v] && not_included[v] == FALSE && server_cost[u][v] < key[v]) {
-                parent[v] = u, key[v] = server_cost[u][v];
-            }
-        }
-    }
-    for (i = 1; i < NUM_SERVER; i++) {
-        network_MST[parent[i]][i] = server_cost[parent[i]][i];
-        network_MST[i][parent[i]] = server_cost[i][parent[i]];
-    }
-    print_network_MST_info();
-}
-
-int min_key(int key[], int not_included[]) {
-    int min = INT_MAX, min_index = 0;
-    int vertex;
-    for (vertex = 0; vertex < NUM_SERVER; vertex++)
-        if (not_included[vertex] == FALSE && key[vertex] < min)
-            min = key[vertex], min_index = vertex;
-    return min_index;
-}
-
+// Close all UDP and TCP sockets.
 void close_sockets() {
     if (close(TCP_socket_descriptor) < 0) {
         display_error_message_int("Error closing TCP socket ", TCP_socket_descriptor, TCP_SOCKET_CLOSE_ERROR);
@@ -321,6 +268,80 @@ void close_sockets() {
     }
 }
 
+// Helper function: add the received server neighbors info in string to the 2D array in integers.
+void add_to_server_cost(char *buffer) {
+    int server_number = (int) buffer[40] - ASCII_A;
+    char cost_string[MESSAGE_PART_LENGTH];
+    int cost;
+    int i, j;
+    for (i = 0; i < NUM_SERVER; i++) {
+        for (j = 0; j < MESSAGE_PART_LENGTH - 1; j++) {
+            cost_string[j] = buffer[i * (MESSAGE_PART_LENGTH - 1) + j];
+        }
+        cost_string[j] = '\0';
+        cost = atoi(cost_string);
+        server_cost[server_number][i] = cost;
+    }
+}
+
+// Helper function: prepare for the buffer message with the network topology to send.
+void prepare_buffer_message(char *buffer) {
+    char UDP_message_part[MESSAGE_PART_LENGTH];
+    int i, j, k;
+    for (i = 0; i < NUM_SERVER; i++) {
+        for (j = 0; j < NUM_SERVER; j++) {
+            nitoa(server_cost[i][j], UDP_message_part, 10);
+            for (k = 0; k < MESSAGE_PART_LENGTH - 1; k++) {
+                buffer[(i * NUM_SERVER + j) * (MESSAGE_PART_LENGTH - 1) + k] = UDP_message_part[k];
+            }
+        }
+    }
+    buffer[UDP_MESSAGE_LENGTH - 1] = '\0';
+}
+
+// Helper function: calculate the network MST based on the received network topology using Prim's.
+void calculate_network_MST() {
+    int parent[NUM_SERVER];
+    int key[NUM_SERVER];
+    int not_included[NUM_SERVER];
+    int i;
+    for (i = 0; i < NUM_SERVER; i++) {
+        key[i] = INT_MAX;
+        not_included[i] = FALSE;
+    }
+    key[0] = 0;
+    parent[0] = -1;
+    for (i = 0; i < NUM_SERVER - 1; i++) {
+        int u = min_key(key, not_included);
+        int v;
+        not_included[u] = TRUE;
+        for (v = 0; v < NUM_SERVER; v++) {
+            if (server_cost[u][v] && not_included[v] == FALSE && server_cost[u][v] < key[v]) {
+                parent[v] = u, key[v] = server_cost[u][v];
+            }
+        }
+    }
+    for (i = 1; i < NUM_SERVER; i++) {
+        network_MST[parent[i]][i] = server_cost[parent[i]][i];
+        network_MST[i][parent[i]] = server_cost[i][parent[i]];
+    }
+    print_network_MST_info();
+}
+
+// Helper function for calculate_network_MST(): find and return the index of the vertex with minimum key value that
+// is not yet included in the current MST.
+int min_key(int key[], int not_included[]) {
+    int min = INT_MAX, min_index = 0;
+    int vertex;
+    for (vertex = 0; vertex < NUM_SERVER; vertex++)
+        if (!not_included[vertex] && key[vertex] < min) {
+            min = key[vertex];
+            min_index = vertex;
+        }
+    return min_index;
+}
+
+// Helper function: resolve a given host name and return the IP address of that host name.
 struct hostent *resolve_host_name(char *host_name) {
     struct hostent *host_IP_address;
     if ((host_IP_address = gethostbyname(host_name)) == NULL) {
@@ -329,6 +350,7 @@ struct hostent *resolve_host_name(char *host_name) {
     return host_IP_address;
 }
 
+// Helper function: update the socket info with the given socket descriptor.
 void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address) {
     int address_length = sizeof(socket_address);
     if (getsockname(socket_descriptor, (struct sockaddr *) socket_address, (socklen_t *) &address_length) < 0) {
@@ -337,6 +359,7 @@ void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_addres
     }
 }
 
+// Helper function: convert the given integer to a string according to the given base.
 char *nitoa(int number, char *string, int base) {
     int i = 0, j = 0;
     int is_negative = FALSE;
@@ -374,6 +397,7 @@ char *nitoa(int number, char *string, int base) {
     return string;
 }
 
+// Helper function: print receiving info to the command line window.
 void print_receive_info(char server_name, struct sockaddr_in *server_TCP_socket_address) {
     int i;
     putchar('\n');
@@ -393,6 +417,7 @@ void print_receive_info(char server_name, struct sockaddr_in *server_TCP_socket_
            server_name, ntohs(TCP_socket_address.sin_port), inet_ntoa(TCP_socket_address.sin_addr));
 }
 
+// Helper function: print the sending info to the command line window.
 void print_send_info(char server_name, struct sockaddr_in *server_UDP_socket_address) {
     putchar('\n');
     printf("The Client has sent the network topology to the network topology to the Server "
@@ -405,6 +430,7 @@ void print_send_info(char server_name, struct sockaddr_in *server_UDP_socket_add
            server_name, ntohs(UDP_socket_address.sin_port), inet_ntoa(UDP_socket_address.sin_addr));
 }
 
+// Helper function: print the calculated MST to the command line window.
 void print_network_MST_info() {
     putchar('\n');
     printf("The Client has calculated a tree. The tree cost is %ld:", calculate_network_MST_cost());
@@ -412,6 +438,7 @@ void print_network_MST_info() {
     print_edge_cost(network_MST);
 }
 
+// Helper function: print all the edge's costs in the received network topology to the command line window.
 void print_edge_cost(int edge_cost[NUM_SERVER][NUM_SERVER]) {
     int i, j;
     printf("Edge------Cost\n");
@@ -425,6 +452,7 @@ void print_edge_cost(int edge_cost[NUM_SERVER][NUM_SERVER]) {
     }
 }
 
+// Helper function: calculate the cost of all edges in the calculated MST.
 long calculate_network_MST_cost() {
     int i, j;
     long sum = 0;
@@ -436,6 +464,7 @@ long calculate_network_MST_cost() {
     return sum;
 }
 
+// Helper function: display the error message with the given message, socket descriptor and error number.
 void display_error_message_int(char *error_info_front, int socket_descriptor, int error_number) {
     char error_info[ERROR_MESSAGE_LENGTH];
     char socket_descriptor_string[ERROR_MESSAGE_LENGTH];
@@ -446,6 +475,7 @@ void display_error_message_int(char *error_info_front, int socket_descriptor, in
     exit(error_number);
 }
 
+// Helper function: display the error message with the two parts of the error messages and error number.
 void display_error_message_string(char *error_info_front, char *error_info_back, int error_number) {
     char error_info[ERROR_MESSAGE_LENGTH];
     strcat(error_info, error_info_front);

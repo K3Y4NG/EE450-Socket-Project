@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include "serverD.h"
 
+// Define global variables for UDP and TCP sockets.
 int UDP_socket_descriptor;
 int TCP_socket_descriptor;
 
@@ -21,11 +22,14 @@ struct sockaddr_in client_UDP_socket_address;
 struct sockaddr_in TCP_socket_address;
 struct sockaddr_in client_TCP_socket_address;
 
+// Define global variables for network cost and topology.
 int server_cost[NUM_SERVER];
 int network_topology[NUM_SERVER][NUM_SERVER];
 
+// Main function here.
 int main() {
     putchar('\n');
+    printf("The Server %c is up and running.\n", SERVER_NAME_CHAR);
     set_up_UDP_socket();
     read_file();
     set_up_TCP_socket();
@@ -36,15 +40,16 @@ int main() {
     return 0;
 }
 
+// UDP socket setup includes creating and binding process.
 void set_up_UDP_socket() {
     if ((UDP_socket_descriptor = create_UDP_socket()) < 0) {
         perror("Error creating UDP socket");
         exit(UDP_SOCKET_CREATION_ERROR);
     }
     bind_UDP_socket();
-    printf("The Server %c is up and running.\n", SERVER_NAME_CHAR);
 }
 
+// Create a UDP socket and return the socket descriptor with error checking.
 int create_UDP_socket() {
     if ((UDP_socket_descriptor = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         return -1;
@@ -56,6 +61,7 @@ int create_UDP_socket() {
     }
 }
 
+// Bind the UDP socket with given socket descriptor with error checking.
 void bind_UDP_socket() {
     memset((char *) &UDP_socket_address, 0, sizeof(struct sockaddr_in));
     struct hostent *nunki_server_IP_address_list_raw = resolve_host_name(HOST_NAME);
@@ -70,6 +76,7 @@ void bind_UDP_socket() {
     update_socket_info(UDP_socket_descriptor, &UDP_socket_address);
 }
 
+// Read from configuration file and add costs to array with error checking.
 void read_file() {
     FILE *file = fopen(SERVER_CONFIG_FILENAME, "r");
     char line[LINE_LENGTH];
@@ -83,7 +90,13 @@ void read_file() {
             display_error_message_string("Error reading file ", SERVER_CONFIG_FILENAME, FILE_LINE_READING_ERROR);
         }
         else {
-            server_cost[line_part_server_name[6] - ASCII_A] = atoi(line_part_to_server_cost);
+            int to_server_name_index = line_part_server_name[6] - ASCII_A;
+            int to_server_cost = atoi(line_part_to_server_cost);
+            if (to_server_name_index >= 0 && to_server_name_index < NUM_SERVER && to_server_cost > 0) {
+                server_cost[to_server_name_index] = to_server_cost;
+            } else {
+                display_error_message_string("Invalid data format in file ", SERVER_CONFIG_FILENAME, FILE_DATA_FORMAT_ERROR);
+            }
         }
     }
     if (fclose(file)) {
@@ -92,6 +105,7 @@ void read_file() {
     print_server_costs();
 }
 
+// TCP socket setup includes creating and binding process.
 void set_up_TCP_socket() {
     if ((TCP_socket_descriptor = create_TCP_socket()) < 0) {
         perror("Error creating TCP socket");
@@ -100,6 +114,7 @@ void set_up_TCP_socket() {
     bind_TCP_socket();
 }
 
+// Create a TCP socket and return the socket descriptor with error checking.
 int create_TCP_socket() {
     if ((TCP_socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         return -1;
@@ -107,6 +122,7 @@ int create_TCP_socket() {
     else return TCP_socket_descriptor;
 }
 
+// Bind the TCP socket with given socket descriptor with error checking.
 void bind_TCP_socket() {
     memset((char *) &TCP_socket_address, 0, sizeof(struct sockaddr_in));
     struct hostent *server_IP_address_list_raw = resolve_host_name(HOST_NAME);
@@ -121,6 +137,7 @@ void bind_TCP_socket() {
     update_socket_info(TCP_socket_descriptor, &TCP_socket_address);
 }
 
+// Connect to Client over the created TCP connection.
 void connect_to_client_over_TCP() {
     memset((char *) &client_TCP_socket_address, 0, sizeof(client_TCP_socket_address));
     struct hostent *client_IP_address_list_raw = resolve_host_name(HOST_NAME);
@@ -135,6 +152,7 @@ void connect_to_client_over_TCP() {
     }
 }
 
+// After connecting successfully, send neighboring info to the client over the TCP connection.
 void send_neighbor_info_over_TCP() {
     char buffer[TCP_MESSAGE_LENGTH];
     prepare_buffer_message(buffer);
@@ -145,6 +163,7 @@ void send_neighbor_info_over_TCP() {
     print_send_info();
 }
 
+// After sending successfully, receive the network topology from the Client over UDP connection.
 void receive_network_topology_over_UDP() {
     char buffer[UDP_MESSAGE_LENGTH];
     int address_length = sizeof(UDP_socket_address);
@@ -163,6 +182,7 @@ void receive_network_topology_over_UDP() {
     print_receive_info();
 }
 
+// Close both UDP and TCP sockets.
 void close_sockets() {
     if (close(UDP_socket_descriptor) < 0) {
         display_error_message_int("Error closing UDP socket ", UDP_socket_descriptor, UDP_SOCKET_CLOSE_ERROR);
@@ -172,6 +192,7 @@ void close_sockets() {
     }
 }
 
+// Helper function: resolve a given host name and return the IP address of that host name.
 struct hostent *resolve_host_name(char *host_name) {
     struct hostent *host_IP_address;
     if ((host_IP_address = gethostbyname(host_name)) == NULL) {
@@ -180,6 +201,7 @@ struct hostent *resolve_host_name(char *host_name) {
     return host_IP_address;
 }
 
+// Helper function: update the socket info with the given socket descriptor.
 void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_address) {
     int address_length = sizeof(socket_address);
     if (getsockname(socket_descriptor, (struct sockaddr *) socket_address, (socklen_t *) &address_length) < 0) {
@@ -187,6 +209,7 @@ void update_socket_info(int socket_descriptor, struct sockaddr_in *socket_addres
     }
 }
 
+// Helper function: convert the given integer to a string according to the given base.
 char *nitoa(int number, char *string, int base) {
     int i = 0, j = 0;
     int is_negative = FALSE;
@@ -224,6 +247,7 @@ char *nitoa(int number, char *string, int base) {
     return string;
 }
 
+// Helper function: prepare for the buffer message with network costs to send.
 char *prepare_buffer_message(char *buffer) {
     char cost[MESSAGE_PART_LENGTH];
     int i, j;
@@ -238,6 +262,7 @@ char *prepare_buffer_message(char *buffer) {
     return buffer;
 }
 
+// Helper function: add the received the network topology info in string to the 2D array in integers.
 void add_network_topology(char *buffer) {
     int i, j, k;
     for (i = 0; i < NUM_SERVER; i++) {
@@ -257,6 +282,7 @@ void add_network_topology(char *buffer) {
     }
 }
 
+// Helper function: print all the server costs to the command line window.
 void print_server_costs() {
     int i;
     putchar('\n');
@@ -270,6 +296,7 @@ void print_server_costs() {
     }
 }
 
+// Helper function: print the sending info to the command line window.
 void print_send_info() {
     putchar('\n');
     printf("The Server %c finishes sending its neighbor information to the Client with "
@@ -281,6 +308,7 @@ void print_send_info() {
            SERVER_NAME_CHAR, htons(TCP_socket_address.sin_port), inet_ntoa(TCP_socket_address.sin_addr));
 }
 
+// Helper function: print receiving info to the command line window.
 void print_receive_info() {
     putchar('\n');
     printf("The server %c has received the network topology from the Client with "
@@ -293,6 +321,7 @@ void print_receive_info() {
     putchar('\n');
 }
 
+// Helper function: print all the edge's costs in the received network topology to the command line window.
 void print_edge_cost() {
     int i, j;
 
@@ -307,6 +336,7 @@ void print_edge_cost() {
     }
 }
 
+// Helper function: display the error message with the given message, socket descriptor and error number.
 void display_error_message_int(char *error_info_front, int socket_descriptor, int error_number) {
     char error_info[ERROR_MESSAGE_LENGTH];
     char socket_descriptor_string[ERROR_MESSAGE_LENGTH];
@@ -317,6 +347,7 @@ void display_error_message_int(char *error_info_front, int socket_descriptor, in
     exit(error_number);
 }
 
+// Helper function: display the error message with the two parts of the error messages and error number.
 void display_error_message_string(char *error_info_front, char *error_info_back, int error_number) {
     char error_info[ERROR_MESSAGE_LENGTH];
     strcat(error_info, error_info_front);

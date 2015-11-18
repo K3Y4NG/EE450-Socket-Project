@@ -7,9 +7,6 @@
 
 #define TRUE                                    1
 #define FALSE                                   0
-
-// TODO: Check DEBUG and LOCAL constants.
-
 #define LOCAL                                   FALSE
 
 /////////////////////////////////////////
@@ -29,13 +26,14 @@
 #define UDP_MESSAGE_LENGTH                      161
 
 #define LINE_TOKEN                              " "
+#define ASCII_0                                 48
 #define ASCII_A                                 65
 #define ASCII_a                                 97
-#define ASCII_0                                 48
 
 #define FILE_OPENING_ERROR                      101
 #define FILE_LINE_READING_ERROR                 102
-#define FILE_CLOSING_ERROR                      103
+#define FILE_DATA_FORMAT_ERROR                  103
+#define FILE_CLOSING_ERROR                      104
 
 #define UDP_SOCKET_CREATION_ERROR               201
 #define TCP_SOCKET_CREATION_ERROR               202

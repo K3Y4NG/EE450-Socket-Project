@@ -63,7 +63,7 @@ IV.  Implementations
             d. Receive network neighbor info from the servers over TCP.
             e. Calculate the network topology.
             f. Send back the network topology to the servers over UDP.
-            g. Calculate and display the MST of the network.
+            g. Calculate and display the MST of the network using Prim's algorithm.
             h. Finalize the program and close sockets.
 
     2. Servers
@@ -166,8 +166,17 @@ VII. Idiosyncrasy and Code Reusing
        program. All possible error may occurred due to the OS's conditions are
        caught and are properly handled.
 
-    2. I took the provided materials for reference purpose only, no code is
-       reused from others into this project.
+    2. Code reusing
+        a. Prim's algorithm for finding MST code segment is reused from:
+           http://www.geeksforgeeks.org/greedy-algorithms-set-5-prims
+           -minimum-spanning-tree-mst-2/
+
+        b. Integer to String function code segment is reused from:
+           http://www.geeksforgeeks.org/implement-itoa/
+
+        c. All other code, including the socket-related code are written and
+           implemented by myself. I used the provided knowledge base materials
+           as for reference purpose only.
 
 ================================================================================
 

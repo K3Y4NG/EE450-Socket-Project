@@ -2,9 +2,9 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/client.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/client.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/serverA.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/serverA.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverA.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverB.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serverC.txt" isTestSource="false" />
